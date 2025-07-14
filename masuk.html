@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masuk - SHRIMPZONE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #1f2937; /* Default text color */
+        }
+        .login-container {
+            @apply bg-white p-8 rounded-lg shadow-xl max-w-md w-full; /* Increased shadow */
+        }
+        .input-field {
+            @apply w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200;
+        }
+        .primary-btn {
+            @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 w-full;
+        }
+        .error-message {
+            @apply mt-4 text-sm text-red-500;
+        }
+        .success-message {
+            @apply mt-4 text-sm text-green-600;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="images/logo.png" alt="SHRIMPZONE Logo" class="mx-auto w-32 mb-6">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Selamat Datang!</h1>
+        <p class="text-gray-600 mb-6">Masuk untuk melanjutkan belanja Anda.</p>
+
+        <div class="mb-4">
+            <label for="username-input" class="block text-gray-700 text-sm font-medium mb-2 text-left">Username</label>
+            <input type="text" id="username-input" class="input-field" placeholder="Masukkan username Anda">
+        </div>
+
+        <button id="login-btn" class="primary-btn mb-6">
+            Masuk
+        </button>
+
+        <div id="login-status" class="mt-4 hidden"></div>
+    </div>
+
+    <script>
+        const usernameInput = document.getElementById('username-input');
+        const loginBtn = document.getElementById('login-btn'); // Renamed from usernameLoginBtn
+        const loginStatus = document.getElementById('login-status');
+
+        // Fungsi untuk menampilkan pesan status
+        function displayStatus(message, type = 'error') {
+            loginStatus.textContent = message;
+            loginStatus.classList.remove('hidden', 'error-message', 'success-message');
+            if (type === 'error') {
+                loginStatus.classList.add('error-message');
+            } else {
+                loginStatus.classList.add('success-message');
+            }
+        }
+
+        // Fungsi untuk mensimulasikan login
+        function simulateLogin(username) { // Removed isGoogleLogin parameter
+            let userDisplayName = username.trim();
+            
+            // Validate username input
+            if (!userDisplayName) {
+                displayStatus('Username tidak boleh kosong.', 'error');
+                return;
+            }
+
+            // Simulate a short delay for "authentication"
+            displayStatus('Memproses login...', 'success'); // Show processing message
+            
+            setTimeout(() => {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('loggedInUsername', userDisplayName);
+                // No need for loggedInUserId if Google login is removed
+                localStorage.removeItem('loggedInUserId'); 
+                
+                displayStatus(`Berhasil masuk sebagai ${userDisplayName}! Mengalihkan...`, 'success');
+
+                // Redirect ke halaman utama atau profil setelah 1 detik
+                setTimeout(() => {
+                    window.location.href = 'profile.html'; // Mengarahkan ke profil
+                }, 1000);
+            }, 1000); // Simulate 1 second loading
+        }
+
+        // Event listener untuk tombol "Masuk"
+        loginBtn.addEventListener('click', () => {
+            simulateLogin(usernameInput.value);
+        });
+
+        // Event listener untuk input username (tekan Enter)
+        usernameInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                simulateLogin(usernameInput.value);
+            }
+        });
+
+        // Cek status login saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('isLoggedIn') === 'true') {
+                displayStatus(`Anda sudah masuk sebagai ${localStorage.getItem('loggedInUsername')}. Mengalihkan...`, 'success');
+                setTimeout(() => {
+                    window.location.href = 'profile.html';
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

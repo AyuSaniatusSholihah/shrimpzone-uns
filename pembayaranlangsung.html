@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konfirmasi Pembayaran - SHRIMPZONE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+            color: #1f2937; /* Default text color */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            display: flex; /* Use flexbox for overall layout */
+            flex-direction: column; /* Stack header and main vertically */
+        }
+        
+        /* Specific Header Structure based on the latest image (image_e76fb5.png) */
+        .top-orange-strip { /* The very top orange bar */
+            background-color: #f59e0b; /* bg-orange-500 */
+            height: 48px; /* Fixed height from image */
+            width: 100%;
+            position: fixed; /* Stays at the top */
+            top: 0;
+            left: 0;
+            z-index: 50; /* Ensures it's always on top */
+        }
+
+        .main-header-content { /* The white section with icons and title */
+            background-color: white; /* bg-white */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-md */
+            padding-top: 12px; /* py-3 */
+            padding-bottom: 12px; /* py-3 */
+            position: fixed; /* Stays at the top */
+            top: 48px; /* Below the orange strip */
+            width: 100%;
+            z-index: 40; /* Below orange strip, above main content */
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Space out left and right icons */
+            padding-left: 2rem; /* px-8 */
+            padding-right: 2rem; /* px-8 */
+        }
+
+        .header-icon-group { /* Group for icons like back/home */
+            display: flex; /* flex */
+            align-items: center; /* items-center */
+            gap: 1rem; /* gap-4 */
+        }
+        .header-action-icon {
+            font-size: 1.5rem; /* text-2xl */
+            color: #4b5563; /* text-gray-600 */
+            cursor: pointer; /* cursor-pointer */
+            transition: color 200ms; /* transition duration-200 */
+        }
+        .header-action-icon:hover {
+            color: #2563eb; /* hover:text-blue-600 */
+        }
+
+        .header-page-title-text { /* The "Konfirmasi Pembayaran" title */
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            color: #1f2937; /* text-gray-800 */
+            position: absolute; /* Absolute positioning for exact centering */
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap; /* Prevent title from wrapping */
+            z-index: 10; /* Ensures title is visible */
+        }
+        
+        /* Main content layout adjustment for centering */
+        .main-content-confirm {
+            flex-grow: 1; /* Allows main content to take all available vertical space */
+            display: flex;
+            align-items: flex-start; /* Align items to the start (top) */
+            justify-content: center; /* Center horizontally */
+            padding-top: calc(48px + 48px + 1.5rem); /* Space from fixed orange strip + main-header-content height + some extra padding */
+            /* This is a crucial adjustment to push content down from fixed header */
+            padding-bottom: 2rem; /* Padding at bottom */
+            width: 100%;
+            box-sizing: border-box; /* Include padding in element's total width */
+        }
+
+        /* Grid wrapper for the main content cards (the "box") */
+        .confirm-grid-wrapper {
+            display: grid; /* grid */
+            grid-template-columns: 1fr; /* grid-cols-1 */
+            gap: 1.5rem; /* gap-x-8 gap-y-6 */
+            max-width: 900px; /* Max width for the whole content block */
+            width: 100%;
+            padding: 1.5rem; /* Overall padding for the content block inside the box */
+            background-color: white; /* Background for the whole content block */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* Shadow for the whole content block */
+            border-radius: 0.5rem; /* Rounded corners for the whole block */
+            box-sizing: border-box; /* Include padding in element's total width */
+        }
+
+        @media (min-width: 768px) { /* md breakpoint */
+            .confirm-grid-wrapper {
+                grid-template-columns: 1fr 1fr; /* md:grid-cols-2 */
+            }
+            .summary-col {
+                grid-column: span 1 / span 1; /* md:col-span-1 */
+            }
+        }
+
+        /* Inner card styles (now flatter inside the main wrapper) */
+        .confirm-card {
+            background-color: white; /* bg-white */
+            padding: 0; /* p-0 */
+        }
+        
+        /* Section titles */
+        .section-title {
+            font-size: 1rem; /* text-base */
+            font-weight: 600; /* font-semibold */
+            color: #1f2937; /* text-gray-800 */
+            margin-bottom: 0.25rem; /* mb-1 */
+        }
+        .text-info {
+            font-size: 0.875rem; /* text-sm */
+            color: #374151; /* text-gray-700 */
+            line-height: 1.5; /* leading-relaxed (default in Inter for small text) */
+        }
+        .text-strong {
+            font-weight: 500; /* font-medium */
+            color: #111827; /* text-gray-900 */
+        }
+
+        /* Order Summary specific styles */
+        .summary-row {
+            display: flex; /* flex */
+            justify-content: space-between; /* justify-between */
+            align-items: center; /* items-center */
+            font-size: 0.875rem; /* text-sm */
+        }
+        .summary-divider {
+            border-top: 1px solid #d1d5db; /* border-t border-gray-300 */
+            padding-top: 0.25rem; /* pt-1 */
+            margin-top: 0.25rem; /* mt-1 */
+        }
+        .total-row {
+            font-weight: 700; /* font-bold */
+            font-size: 1rem; /* text-base */
+            color: #1f2937; /* text-gray-800 */
+        }
+        .item-row {
+            display: flex; /* flex */
+            justify-content: space-between; /* justify-between */
+            font-size: 0.75rem; /* text-xs */
+            color: #374151; /* text-gray-700 */
+        }
+
+        /* Styles for the bottom 'Konfirmasi Pembayaran' button - THIS IS THE ONE */
+        .confirm-payment-button-bottom {
+            background-color: #2563eb; /* bg-blue-600 */
+            color: white; /* text-white */
+            font-weight: 600; /* font-semibold */
+            padding: 0.75rem 1rem; /* py-2 px-4 */
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: background-color 200ms; /* transition duration-200 */
+            width: 100%; /* w-full */
+            margin-top: 1rem; /* mt-4 */
+            border: none;
+            cursor: pointer;
+        }
+        .confirm-payment-button-bottom:hover {
+            background-color: #1d4ed8; /* hover:bg-blue-700 */
+        }
+        .confirm-payment-button-bottom:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Spacing overrides for a tighter look within sections */
+        .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+            margin-top: 0.5rem; /* Adjusted for tighter spacing in payment/delivery sections */
+        }
+        .space-y-2 > :not([hidden]) ~ :not([hidden]) {
+            margin-top: 0.25rem; /* Adjusted for tighter spacing in order summary items */
+        }
+
+        /* Additional fine-tuning for padding/margins within sections */
+        .section-padding {
+             padding-top: 0.5rem; /* py-2 */
+             padding-bottom: 0.5rem; /* py-2 */
+        }
+        .section-bottom-margin {
+             margin-bottom: 1rem; /* mb-4 */
+        }
+
+        /* Adjustments for the specific image layout to remove unnecessary outer card styling */
+        .confirm-grid-wrapper .confirm-card {
+            box-shadow: none; /* Remove individual card shadows if the outer wrapper has one */
+            border-radius: 0; /* Remove individual card border-radius */
+            padding: 0; /* Remove individual card padding, handled by section-padding */
+        }
+    </style>
+</head>
+<body>
+    <div class="top-orange-strip"></div>
+
+    <header class="main-header-content">
+        <div class="header-icon-group">
+            <a href="#" onclick="history.back()" class="header-action-icon">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+        
+        <div class="header-page-title-text">
+            Konfirmasi Pembayaran
+        </div>
+        
+        <div class="header-icon-group">
+            <a href="index.html" class="header-action-icon"><i class="fas fa-home"></i></a>
+        </div>
+    </header>
+
+    <main class="main-content-confirm">
+        <div class="confirm-grid-wrapper">
+            <div class="md:col-span-1 space-y-4">
+                <div class="confirm-card">
+                    <div class="section-padding">
+                        <h2 class="section-title">Metode Pembayaran</h2>
+                        <p class="text-info">Metode: <span id="displayed-payment-method" class="text-strong">Memuat...</span></p>
+                    </div>
+                </div>
+
+                <div class="confirm-card">
+                    <div class="section-padding">
+                        <h2 class="section-title">Detail Pengiriman</h2>
+                        <p class="text-info">Alamat: <span id="shipping-address" class="text-strong">Memuat...</span></p>
+                        <p class="text-info">Penerima: <span id="recipient-name" class="text-strong">Memuat...</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:col-span-1 summary-col">
+                <div class="confirm-card">
+                    <div class="section-padding">
+                        <h2 class="section-title">Ringkasan Pesanan</h2>
+                        <div id="order-summary-items" class="space-y-2 text-gray-700 section-bottom-margin border-b border-gray-300 pb-2">
+                            </div>
+                        <div class="space-y-2 text-gray-700 section-bottom-margin">
+                            <div class="summary-row">
+                                <span>Subtotal Barang</span>
+                                <span id="summary-subtotal" class="text-strong">Rp 0</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Biaya Pengiriman</span>
+                                <span class="text-strong">Rp <span id="shipping-cost-display">15.000</span></span>
+                            </div>
+                            <div class="summary-row summary-divider total-row">
+                                <span>Total Pembayaran</span>
+                                <span id="summary-total-payment">Rp 0</span>
+                            </div>
+                        </div>
+                        <button id="confirm-payment-button-bottom" 
+                                class="confirm-payment-button-bottom">
+                            Konfirmasi Pembayaran
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const confirmPaymentButtonBottom = document.getElementById('confirm-payment-button-bottom'); 
+        const summarySubtotalDisplay = document.getElementById('summary-subtotal');
+        const summaryTotalPaymentDisplay = document.getElementById('summary-total-payment');
+        const orderSummaryItemsContainer = document.getElementById('order-summary-items');
+        const shippingAddressDisplay = document.getElementById('shipping-address');
+        const recipientNameDisplay = document.getElementById('recipient-name');
+        const displayedPaymentMethod = document.getElementById('displayed-payment-method');
+
+        const SHIPPING_COST = 15000;
+
+        let selectedPaymentMethod = null; 
+        let currentOrderItems = [];
+        let calculatedSubtotal = 0;
+        let finalPaymentTotal = 0;
+        let latestOrderId = null;
+
+        function loadOrderDetails() {
+            // Retrieve data from localStorage
+            finalPaymentTotal = parseFloat(localStorage.getItem('paymentTotal')) || 0;
+            currentOrderItems = JSON.parse(localStorage.getItem('currentOrderItems')) || [];
+            // Retrieve the RAW selected payment method key
+            selectedPaymentMethod = localStorage.getItem('selectedPaymentMethod') || 'Tidak dipilih'; 
+            
+            const loggedInUsername = localStorage.getItem('loggedInUsername') || 'Pengguna'; // Fallback if no user is logged in
+
+            const savedAddress = localStorage.getItem('checkoutAddress') || 'Alamat belum diatur, Kota, Provinsi';
+            const savedRecipient = localStorage.getItem('checkoutRecipientName') || loggedInUsername; // Use saved recipient name or logged in username
+
+            calculatedSubtotal = 0;
+            orderSummaryItemsContainer.innerHTML = ''; // Clear previous items
+
+            // Populate order items
+            if (currentOrderItems.length === 0) {
+                orderSummaryItemsContainer.innerHTML = '<p class="text-red-500 text-center text-sm">Keranjang Anda kosong. Tidak dapat melanjutkan pembayaran.</p>';
+                confirmPaymentButtonBottom.disabled = true; 
+                confirmPaymentButtonBottom.classList.add('opacity-50', 'cursor-not-allowed'); 
+            } else {
+                currentOrderItems.forEach(item => {
+                    const itemPrice = typeof item.productPrice === 'string' ? parseFloat(item.productPrice) : item.productPrice;
+                    const itemTotal = itemPrice * item.quantity; 
+                    calculatedSubtotal += itemTotal;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'item-row';
+                    itemDiv.innerHTML = `
+                        <span>${item.productName} (x${item.quantity})</span>
+                        <span>Rp ${itemTotal.toLocaleString('id-ID')}</span>
+                    `;
+                    orderSummaryItemsContainer.appendChild(itemDiv);
+                });
+                confirmPaymentButtonBottom.disabled = false;
+                confirmPaymentButtonBottom.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+
+            // Update summary displays
+            summarySubtotalDisplay.textContent = `Rp ${calculatedSubtotal.toLocaleString('id-ID')}`;
+            document.getElementById('shipping-cost-display').textContent = SHIPPING_COST.toLocaleString('id-ID');
+            summaryTotalPaymentDisplay.textContent = `Rp ${finalPaymentTotal.toLocaleString('id-ID')}`;
+            
+            // Update payment and shipping details
+            shippingAddressDisplay.textContent = savedAddress;
+            recipientNameDisplay.textContent = savedRecipient;
+            // Use the formatPaymentMethodName function to display the user-friendly name
+            displayedPaymentMethod.textContent = formatPaymentMethodName(selectedPaymentMethod);
+        }
+
+        // This function needs to match the one in the checkout page for consistency
+        function formatPaymentMethodName(methodKey) {
+            let name = '';
+            // Define a map for specific payment method display names
+            const methodDisplayNames = {
+                'bri': 'Transfer Bank - BRI',
+                'bca': 'Transfer Bank - BCA',
+                'bni': 'Transfer Bank - BNI',
+                'mandiri': 'Transfer Bank - Mandiri',
+                'shopeepay': 'E-Wallet - ShopeePay',
+                'ovo': 'E-Wallet - OVO',
+                'gopay': 'E-Wallet - GoPay',
+                'dana': 'E-Wallet - Dana',
+                'credit-card': 'Kartu Kredit/Debit',
+                'cod': 'Cash On Delivery (COD)'
+            };
+            
+            name = methodDisplayNames[methodKey] || 'Metode Tidak Diketahui';
+            return name;
+        }
+
+        function performConfirmation() {
+            if (!selectedPaymentMethod || selectedPaymentMethod === 'Tidak dipilih') {
+                alert('Metode pembayaran belum dipilih dari halaman sebelumnya. Silakan kembali ke keranjang.');
+                window.location.href = 'pembayarankeranjang.html'; // Assuming this is the cart page where payment method is chosen
+                return;
+            }
+
+            if (currentOrderItems.length === 0) {
+                alert('Keranjang Anda kosong. Tidak dapat melanjutkan pembayaran.');
+                window.location.href = 'keranjang.html'; // Assuming this is the main cart page
+                return;
+            }
+
+            // Display a success message using the formatted name
+            alert(`Pembayaran sebesar Rp ${finalPaymentTotal.toLocaleString('id-ID')} menggunakan ${formatPaymentMethodName(selectedPaymentMethod)} berhasil dikonfirmasi!`);
+
+            latestOrderId = 'ORD-' + Date.now(); // Generate a simple unique order ID
+
+            // If a global notification function exists (from your main site JS), use it
+            if (typeof window.addNotification === 'function') {
+                window.addNotification(
+                    'purchase', 
+                    'Pembelian Berhasil!', 
+                    `Pesanan Anda dengan ID ${latestOrderId} senilai Rp ${finalPaymentTotal.toLocaleString('id-ID')} telah berhasil diproses melalui ${formatPaymentMethodName(selectedPaymentMethod)}. Terima kasih!`
+                );
+            } else {
+                console.warn('window.addNotification function not found. Notification not added.');
+            }
+
+            // Clear relevant localStorage items after successful payment
+            localStorage.removeItem('shoppingCart');
+            localStorage.removeItem('paymentTotal');
+            localStorage.removeItem('currentOrderItems');
+            localStorage.removeItem('selectedPaymentMethod');
+            localStorage.removeItem('checkoutAddress');
+            localStorage.removeItem('checkoutRecipientName');
+
+            // Add order to history
+            let orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+            orderHistory.push({
+                orderId: latestOrderId, 
+                items: currentOrderItems, // Save the actual items for detailed history
+                total: finalPaymentTotal,
+                date: new Date().toISOString(), // Use ISO string for consistent date storage
+                method: formatPaymentMethodName(selectedPaymentMethod), // Store the formatted name
+                status: 'Menunggu Pengemasan' // Initial status
+            });
+            localStorage.setItem('orderHistory', JSON.stringify(orderHistory));
+
+            // Redirect to a receipt page or success page
+            window.location.href = `order-receipt.html?orderId=${latestOrderId}`;
+        }
+
+        // Event listener for the confirmation button
+        confirmPaymentButtonBottom.addEventListener('click', performConfirmation);
+
+        // Load order details when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', loadOrderDetails);
+    </script>
+</body>
+</html>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Struk Pembayaran - SHRIMPZONE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+            color: #1f2937; /* text-gray-900 default */
+            line-height: 1.5;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            display: flex; /* Use flexbox for vertical centering */
+            flex-direction: column; /* Stack header and main vertically */
+        }
+        /* Header section for consistency */
+        .header-section {
+            @apply bg-white shadow-md py-4;
+            flex-shrink: 0; /* Prevent header from shrinking */
+        }
+        .header-content {
+            @apply container mx-auto px-4 flex justify-between items-center;
+        }
+
+        /* Main content container for receipt - Centering magic */
+        .main-content-receipt {
+            @apply flex-grow flex items-center justify-center py-8 px-4; /* Centers content vertically and horizontally */
+            /* Removed max-w-2xl here, moved to receipt-card for flexible centering */
+        }
+
+        .receipt-card {
+            @apply bg-white p-6 rounded-lg shadow-xl border border-gray-200;
+            max-width: 600px; /* Specific max width for the receipt card */
+            width: 100%; /* Ensure it takes full width up to max-width */
+            /* Add responsive padding to the card itself */
+            @apply px-6 sm:px-8 lg:px-10; /* Increased padding inside the card */
+        }
+        
+        .section-title {
+            @apply text-xl font-semibold text-gray-800 mb-3;
+        }
+        .text-info {
+            @apply text-gray-700 text-sm;
+        }
+        .text-strong {
+            @apply font-semibold text-gray-900;
+        }
+
+        .summary-row {
+            @apply flex justify-between items-center text-sm;
+        }
+        .summary-divider {
+            @apply border-t border-gray-200 pt-2 mt-2;
+        }
+        .total-row {
+            @apply font-bold text-lg text-blue-700;
+        }
+        .item-row {
+            @apply flex justify-between text-sm text-gray-800;
+        }
+
+        /* Buttons styling */
+        .receipt-button {
+            @apply font-semibold py-2 px-4 rounded-lg transition duration-200 w-full text-center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .button-primary {
+            @apply bg-blue-600 hover:bg-blue-700 text-white;
+        }
+        .button-secondary {
+            @apply bg-gray-600 hover:bg-gray-700 text-white; /* Changed to darker gray for print */
+        }
+
+        /* Spacing overrides for a tighter look within cards */
+        .space-y-4 > :not([hidden]) ~ :not([hidden]) {
+            margin-top: 0.75rem;
+        }
+        .space-y-2 > :not([hidden]) ~ :not([hidden]) {
+            margin-top: 0.25rem;
+        }
+
+        /* Print specific styles */
+        @media print {
+            body {
+                background-color: white !important;
+            }
+            .header-section, .back-to-home-button, .print-button {
+                display: none !important;
+            }
+            .receipt-card {
+                box-shadow: none !important;
+                border: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                max-width: none !important;
+                width: auto !important;
+            }
+            .main-content-receipt {
+                max-width: none !important;
+                padding: 0 !important;
+                display: block !important; /* Reset flex for print */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header-section">
+        <div class="header-content">
+            <a href="index.html" class="text-gray-600 hover:text-blue-600">
+                <i class="fas fa-home text-xl"></i>
+            </a>
+            <h1 class="text-2xl font-bold text-gray-800">Struk Pembayaran</h1>
+            <div class="w-6"></div> </div>
+    </header>
+
+    <main class="main-content-receipt">
+        <div class="receipt-card">
+            <div class="text-center mb-6">
+                <i class="fas fa-check-circle text-green-500 text-6xl mb-4"></i>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Pembayaran Berhasil!</h2>
+                <p class="text-gray-600">Terima kasih telah berbelanja di SHRIMPZONE.</p>
+            </div>
+
+            <div class="space-y-4">
+                <h3 class="section-title">Detail Pesanan</h3>
+                <div class="text-info space-y-2">
+                    <p>ID Pesanan: <span id="receipt-order-id" class="text-strong">Memuat...</span></p>
+                    <p>Tanggal: <span id="receipt-date" class="text-strong">Memuat...</span></p>
+                    <p>Metode Pembayaran: <span id="receipt-payment-method" class="text-strong">Memuat...</span></p>
+                </div>
+                
+                <h3 class="section-title mt-6">Rincian Produk</h3>
+                <div id="receipt-items" class="space-y-2 text-gray-700 mb-4 border-b border-gray-200 pb-4">
+                    </div>
+
+                <div class="space-y-2 text-gray-700">
+                    <div class="summary-row">
+                        <span>Subtotal Barang</span>
+                        <span id="receipt-subtotal" class="text-strong">Rp 0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Biaya Pengiriman</span>
+                        <span class="text-strong">Rp 15.000</span>
+                    </div>
+                    <div class="summary-row summary-divider total-row">
+                        <span>Total Pembayaran</span>
+                        <span id="receipt-total-payment">Rp 0</span>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="window.print()" class="receipt-button button-secondary mt-8">
+                <i class="fas fa-print"></i> Cetak Struk
+            </button>
+            <a href="index.html" class="receipt-button button-primary mt-3">
+                Kembali ke Beranda
+            </a>
+        </div>
+    </main>
+
+    <script>
+        const receiptOrderId = document.getElementById('receipt-order-id');
+        const receiptDate = document.getElementById('receipt-date');
+        const receiptPaymentMethod = document.getElementById('receipt-payment-method');
+        const receiptItemsContainer = document.getElementById('receipt-items');
+        const receiptSubtotal = document.getElementById('receipt-subtotal');
+        const receiptTotalPayment = document.getElementById('receipt-total-payment');
+
+        const SHIPPING_COST = 15000;
+
+        function getQueryParams() {
+            const params = {};
+            window.location.search.substring(1).split("&").forEach(param => {
+                const parts = param.split("=");
+                params[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
+            });
+            return params;
+        }
+
+        function formatPaymentMethodName(methodKey) {
+            switch(methodKey) {
+                case 'bank-transfer': return 'Transfer Bank';
+                case 'ewallet': return 'E-Wallet';
+                case 'credit-card': return 'Kartu Kredit/Debit';
+                case 'cod': return 'Cash On Delivery (COD)';
+                default: return 'Metode Tidak Diketahui';
+            }
+        }
+
+        function loadReceiptDetails() {
+            const params = getQueryParams();
+            const orderIdFromUrl = params.orderId;
+
+            if (!orderIdFromUrl) {
+                alert('ID Pesanan tidak ditemukan.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+            const order = orderHistory.find(o => o.orderId === orderIdFromUrl);
+
+            if (!order) {
+                alert('Detail pesanan tidak ditemukan.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            receiptOrderId.textContent = order.orderId;
+            receiptDate.textContent = new Date(order.date).toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'short' });
+            receiptPaymentMethod.textContent = formatPaymentMethodName(order.method);
+            receiptTotalPayment.textContent = `Rp ${order.total.toLocaleString('id-ID')}`;
+
+            let calculatedSubtotal = 0;
+            receiptItemsContainer.innerHTML = '';
+            order.items.forEach(item => {
+                const itemPrice = typeof item.productPrice === 'string' ? parseFloat(item.productPrice) : item.productPrice;
+                const itemTotal = itemPrice * item.quantity;
+                calculatedSubtotal += itemTotal;
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'item-row';
+                itemDiv.innerHTML = `
+                    <span>${item.productName} (x${item.quantity})</span>
+                    <span>Rp ${itemTotal.toLocaleString('id-ID')}</span>
+                `;
+                receiptItemsContainer.appendChild(itemDiv);
+            });
+            receiptSubtotal.textContent = `Rp ${calculatedSubtotal.toLocaleString('id-ID')}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', loadReceiptDetails);
+    </script>
+</body>
+</html>

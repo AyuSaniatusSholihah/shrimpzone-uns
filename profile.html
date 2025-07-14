@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="id" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Pengguna - SHRIMPZONE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base font for the body */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* CSS Variables for theming */
+        :root {
+            /* Light mode colors */
+            --color-bg-body: #f3f4f6; /* bg-gray-100 */
+            --color-bg-white: #ffffff; /* bg-white */
+            --color-bg-blue-gradient-start: #2563eb; /* blue-600 */
+            --color-bg-blue-gradient-end: #3b82f6; /* blue-500 */
+            --color-bg-gray-button: #e5e7eb; /* bg-gray-200 */
+
+            --color-text-default: #1f2937; /* gray-800, gray-900 */
+            --color-text-secondary: #4b5563; /* gray-600, gray-700 */
+            --color-text-blue: #2563eb; /* blue-600 */
+            --color-text-white: #ffffff;
+            --color-text-gray-icon: #6b7280; /* gray-600 for icons */
+            --color-text-red: #ef4444; /* red-500 */
+
+            --color-border-default: #d1d5db; /* gray-300 */
+            --color-border-light: #e5e7eb; /* gray-200 */
+            --color-border-white: #ffffff; /* white border for photo */
+        }
+
+        [data-theme="dark"] {
+            /* Dark mode colors */
+            --color-bg-body: #1a1a1a;
+            --color-bg-white: #2c2c2c;
+            --color-bg-blue-gradient-start: #1e3a8a; /* darker blue */
+            --color-bg-blue-gradient-end: #1c50a0; /* darker blue */
+            --color-bg-gray-button: #4a4a4a;
+
+            --color-text-default: #e0e0e0;
+            --color-text-secondary: #bdbdbd;
+            --color-text-blue: #63b3ed; /* lighter blue */
+            --color-text-white: #ffffff;
+            --color-text-gray-icon: #a0aec0; /* lighter gray */
+            --color-text-red: #cc0000; /* darker red */
+
+            --color-border-default: #4a4a4a;
+            --color-border-light: #374151;
+            --color-border-white: #555555; /* darker white border for photo */
+        }
+
+        /* Apply variables to general elements */
+        body {
+            background-color: var(--color-bg-body);
+            color: var(--color-text-default);
+        }
+
+        header {
+            background-color: var(--color-bg-white);
+        }
+
+        /* Specific elements using variables */
+        .profile-header-bg {
+            background: linear-gradient(to right, var(--color-bg-blue-gradient-start), var(--color-bg-blue-gradient-end));
+        }
+
+        .tab-button {
+            color: var(--color-text-secondary);
+        }
+        .tab-button:hover {
+            color: var(--color-text-blue);
+        }
+        .tab-button.active {
+            border-color: var(--color-text-blue);
+            color: var(--color-text-blue);
+            border-bottom-width: 2px; /* Ensure bottom border is visible for active tab */
+        }
+
+        .bg-white { background-color: var(--color-bg-white); }
+        .text-gray-800 { color: var(--color-text-default); }
+        .text-gray-600 { color: var(--color-text-secondary); }
+        .text-gray-700 { color: var(--color-text-secondary); }
+        .text-blue-600 { color: var(--color-text-blue); }
+        .text-white { color: var(--color-text-white); }
+        .text-gray-400 { color: var(--color-text-gray-icon); } /* For camera icon opacity */
+
+        .border-gray-200 { border-color: var(--color-border-light); }
+        .border-gray-300 { border-color: var(--color-border-default); }
+        .border-white { border-color: var(--color-border-white); }
+
+        /* Buttons */
+        #edit-photo-button {
+            background-color: #4a5568; /* A solid gray/dark color */
+            color: var(--color-text-white);
+        }
+        #edit-photo-button:hover {
+            background-color: #2d3748; /* Darker on hover */
+        }
+
+        #edit-username-button {
+            background-color: var(--color-bg-white);
+            color: var(--color-text-blue);
+        }
+        #edit-username-button:hover {
+            background-color: var(--color-bg-gray-button); /* Light gray hover */
+        }
+
+        #change-photo-button, .secondary-button {
+            background-color: var(--color-bg-gray-button);
+            color: var(--color-text-secondary);
+        }
+        #change-photo-button:hover, .secondary-button:hover {
+            background-color: var(--color-border-default);
+        }
+
+        #save-profile-settings, #save-address-button, .primary-button {
+            background-color: var(--color-text-blue); /* Using blue-600 equivalent */
+            color: var(--color-text-white);
+        }
+        #save-profile-settings:hover, #save-address-button:hover, .primary-button:hover {
+            background-color: var(--color-bg-blue-gradient-start); /* Slightly darker blue */
+        }
+
+        /* Specific tab content styles */
+        .tab-pane h3 {
+            color: var(--color-text-default);
+        }
+        .tab-pane p {
+            color: var(--color-text-secondary);
+        }
+        .tab-pane label {
+            color: var(--color-text-secondary);
+        }
+        .tab-pane input, .tab-pane textarea, .tab-pane select {
+            background-color: var(--color-bg-white);
+            color: var(--color-text-default);
+            border-color: var(--color-border-default);
+        }
+        .tab-pane input:focus, .tab-pane textarea:focus, .tab-pane select:focus {
+            border-color: var(--color-text-blue);
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25); /* blue-600 with opacity */
+        }
+
+        /* Ensure hidden file input is truly hidden */
+        .hidden-file-input {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* Order history item styles */
+        .order-item {
+            @apply border border-gray-200 rounded-lg p-4 mb-4;
+            background-color: var(--color-bg-white);
+            border-color: var(--color-border-light);
+        }
+        .order-item h4 {
+            @apply text-lg font-semibold mb-2;
+            color: var(--color-text-default);
+        }
+        .order-item p {
+            @apply text-sm;
+            color: var(--color-text-secondary);
+        }
+        .order-item .item-detail {
+            @apply text-sm;
+            color: var(--color-text-secondary);
+        }
+        .order-item .item-detail span {
+            @apply font-medium;
+            color: var(--color-text-default);
+        }
+
+        /* Notification item styles */
+        .notification-item {
+            @apply border border-gray-200 rounded-lg p-4 mb-3;
+            background-color: var(--color-bg-white);
+            border-color: var(--color-border-light);
+        }
+        .notification-item.unread {
+            @apply bg-blue-50; /* Light blue for unread in light mode */
+            background-color: rgba(37, 99, 235, 0.05); /* Lighter blue using rgba for theming */
+        }
+        [data-theme="dark"] .notification-item.unread {
+            background-color: rgba(99, 153, 224, 0.1); /* Darker blue for unread in dark mode */
+        }
+        .notification-item h4 {
+            @apply font-semibold;
+            color: var(--color-text-default);
+        }
+        .notification-item p {
+            @apply text-sm;
+            color: var(--color-text-secondary);
+        }
+        .notification-item .timestamp {
+            @apply text-xs text-gray-500 mt-1;
+            color: var(--color-text-secondary);
+        }
+
+        /* Address Item Styles */
+        .address-item {
+            @apply border border-gray-200 rounded-lg p-4 mb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center;
+            background-color: var(--color-bg-white);
+            border-color: var(--color-border-light);
+        }
+        .address-item.selected-address {
+            @apply border-blue-600 ring-2 ring-blue-600;
+        }
+        .address-item h4 {
+            @apply text-lg font-semibold mb-1;
+            color: var(--color-text-default);
+        }
+        .address-item p {
+            @apply text-sm text-gray-700 mb-2;
+            color: var(--color-text-secondary);
+        }
+        .address-actions {
+            @apply flex space-x-2 mt-3 sm:mt-0;
+        }
+    </style>
+</head>
+<body>
+    <header class="shadow-md py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="javascript:history.back()" onclick="history.back()" class="hover:text-blue-600" style="color: var(--color-text-gray-icon);">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </a>
+            <h1 class="text-2xl font-bold" style="color: var(--color-text-default);">Profil Saya</h1>
+            <button id="theme-toggle" class="hover:text-blue-600" style="color: var(--color-text-gray-icon);">
+                <i class="fas fa-moon text-xl"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="profile-header-bg rounded-lg shadow-md p-6 mb-8 text-white flex flex-col items-center">
+            <div class="relative mb-4">
+                <img id="profile-photo-display" src="https://placehold.co/120x120/cccccc/333333?text=Foto" alt="Foto Profil" class="w-32 h-32 rounded-full object-cover border-4 shadow-lg" style="border-color: var(--color-border-white);">
+                <button id="edit-photo-button" class="absolute bottom-0 right-0 rounded-full p-2 transition duration-200">
+                    <i class="fas fa-camera text-lg"></i>
+                </button>
+                <input type="file" id="profile-photo-input" accept="image/*" class="hidden-file-input">
+            </div>
+            <h2 id="profile-username-display" class="text-2xl font-bold mb-2" style="color: var(--color-text-white);">Nama Pengguna</h2>
+            <button id="edit-username-button" class="px-4 py-2 rounded-full text-sm font-semibold transition duration-200">
+                <i class="fas fa-edit mr-2"></i>Edit Profil
+            </button>
+        </div>
+
+        <div class="rounded-lg shadow-md p-4 mb-6 flex justify-around border-b" style="background-color: var(--color-bg-white); border-color: var(--color-border-light);">
+            <button class="tab-button py-2 px-4 transition duration-200" data-tab="orders-packaging">
+                <i class="fas fa-box-open mr-2"></i>Sedang Dikemas
+            </button>
+            <button class="tab-button py-2 px-4 transition duration-200" data-tab="orders-shipped">
+                <i class="fas fa-truck mr-2"></i>Dikirim
+            </button>
+            <button class="tab-button py-2 px-4 transition duration-200" data-tab="order-history">
+                <i class="fas fa-history mr-2"></i>Histori Pemesanan
+            </button>
+            <button class="tab-button py-2 px-4 transition duration-200" data-tab="chat-notifications">
+                <i class="fas fa-comments mr-2"></i>Notifikasi Chat
+            </button>
+            <button class="tab-button py-2 px-4 transition duration-200" data-tab="my-addresses">
+                <i class="fas fa-map-marker-alt mr-2"></i>Alamat Saya
+            </button>
+        </div>
+
+        <div id="tab-content" class="rounded-lg shadow-md p-6" style="background-color: var(--color-bg-white);">
+            <div id="orders-packaging" class="tab-pane">
+                <h3 class="text-xl font-semibold mb-4" style="color: var(--color-text-default);">Pesanan Sedang Dikemas</h3>
+                <p style="color: var(--color-text-secondary);">Belum ada pesanan yang sedang dikemas saat ini.</p>
+            </div>
+            <div id="orders-shipped" class="tab-pane hidden">
+                <h3 class="text-xl font-semibold mb-4" style="color: var(--color-text-default);">Pesanan Dikirim</h3>
+                <p style="color: var(--color-text-secondary);">Belum ada pesanan yang sedang dalam pengiriman.</p>
+            </div>
+            <div id="order-history" class="tab-pane hidden">
+                <h3 class="text-xl font-semibold mb-4" style="color: var(--color-text-default);">Histori Pemesanan</h3>
+                <div id="order-history-list">
+                    <p class="text-gray-600">Tidak ada histori pemesanan yang tersedia.</p>
+                </div>
+            </div>
+            <div id="chat-notifications" class="tab-pane hidden">
+                <h3 class="text-xl font-semibold mb-4" style="color: var(--color-text-default);">Notifikasi Chat</h3>
+                <div id="notification-list">
+                    <p class="text-gray-600">Tidak ada notifikasi chat baru.</p>
+                </div>
+            </div>
+            <div id="profile-settings" class="tab-pane hidden">
+                <h3 class="text-xl font-semibold mb-4" style="color: var(--color-text-default);">Pengaturan Profil</h3>
+                <div class="mb-4">
+                    <label for="settings-username" class="block text-sm font-medium mb-2" style="color: var(--color-text-secondary);">Username</label>
+                    <input type="text" id="settings-username" class="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Masukkan username baru Anda" style="border: 1px solid var(--color-border-default); background-color: var(--color-bg-white); color: var(--color-text-default);">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium mb-2" style="color: var(--color-text-secondary);">Foto Profil</label>
+                    <div class="flex items-center space-x-4">
+                        <img id="settings-profile-photo-preview" src="https://placehold.co/80x80/cccccc/333333?text=Preview" alt="Foto Profil Preview" class="w-20 h-20 rounded-full object-cover border" style="border-color: var(--color-border-default);">
+                        <button type="button" id="change-photo-button" class="px-4 py-2 rounded-md text-sm font-semibold transition duration-200 secondary-button">
+                            Ubah Foto
+                        </button>
+                        <input type="file" id="settings-profile-photo-input" accept="image/*" class="hidden-file-input">
+                    </div>
+                </div>
+                <button id="save-profile-settings" class="font-medium py-2 px-4 rounded-md transition duration-200 primary-button">
+                    Simpan Perubahan
+                </button>
+                <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md transition duration-200 mt-6">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+
+            <div id="my-addresses" class="tab-pane hidden">
+                <h3 class="text-xl font-semibold mb-4" style="color: var(--color-text-default);">Alamat Saya</h3>
+                <div id="address-list" class="space-y-4 mb-6">
+                    <p class="text-gray-600">Belum ada alamat tersimpan.</p>
+                </div>
+
+                <h4 class="text-lg font-semibold mb-3" style="color: var(--color-text-default);">Tambah/Edit Alamat</h4>
+                <div class="space-y-3">
+                    <div>
+                        <label for="address-label" class="block text-sm font-medium mb-1" style="color: var(--color-text-secondary);">Label Alamat (Contoh: Rumah, Kantor)</label>
+                        <input type="text" id="address-label" class="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Label untuk alamat ini" style="border: 1px solid var(--color-border-default); background-color: var(--color-bg-white); color: var(--color-text-default);">
+                    </div>
+                    <div>
+                        <label for="address-recipient-name" class="block text-sm font-medium mb-1" style="color: var(--color-text-secondary);">Nama Penerima</label>
+                        <input type="text" id="address-recipient-name" class="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nama lengkap penerima" style="border: 1px solid var(--color-border-default); background-color: var(--color-bg-white); color: var(--color-text-default);">
+                    </div>
+                    <div>
+                        <label for="address-phone" class="block text-sm font-medium mb-1" style="color: var(--color-text-secondary);">Nomor Telepon</label>
+                        <input type="tel" id="address-phone" class="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nomor telepon penerima" style="border: 1px solid var(--color-border-default); background-color: var(--color-bg-white); color: var(--color-text-default);">
+                    </div>
+                    <div>
+                        <label for="address-line1" class="block text-sm font-medium mb-1" style="color: var(--color-text-secondary);">Jalan, Nomor Rumah</label>
+                        <textarea id="address-line1" rows="2" class="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nama jalan, nomor rumah, RT/RW" style="border: 1px solid var(--color-border-default); background-color: var(--color-bg-white); color: var(--color-text-default);"></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label for="address-city" class="block text-sm font-medium mb-1" style="color: var(--color-text-secondary);">Kota/Kabupaten</label>
+                            <input type="text" id="address-city" class="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Jakarta Pusat" style="border: 1px solid var(--color-border-default); background-color: var(--color-bg-white); color: var(--color-text-default);">
+                        </div>
+                        <div>
+                            <label for="address-province" class="block text-sm font-medium mb-1" style="color: var(--color-text-secondary);">Provinsi</label>
+                            <input type="text" id="address-province" class="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: DKI Jakarta" style="border: 1px solid var(--color-border-default); background-color: var(--color-bg-white); color: var(--color-text-default);">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="address-postal-code" class="block text-sm font-medium mb-1" style="color: var(--color-text-secondary);">Kode Pos</label>
+                        <input type="text" id="address-postal-code" class="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: 10110" style="border: 1px solid var(--color-border-default); background-color: var(--color-bg-white); color: var(--color-text-default);">
+                    </div>
+                </div>
+                <button id="save-address-button" class="font-medium py-2 px-4 rounded-md transition duration-200 mt-4 primary-button">
+                    Simpan Alamat
+                </button>
+                <button id="cancel-edit-address-button" class="font-medium py-2 px-4 rounded-md transition duration-200 mt-4 secondary-button hidden">
+                    Batal
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const DOM = {
+            profilePhotoDisplay: document.getElementById('profile-photo-display'),
+            profileUsernameDisplay: document.getElementById('profile-username-display'),
+            editPhotoButton: document.getElementById('edit-photo-button'),
+            profilePhotoInput: document.getElementById('profile-photo-input'),
+            editUsernameButton: document.getElementById('edit-username-button'),
+            tabButtons: document.querySelectorAll('.tab-button'),
+            tabPanes: document.querySelectorAll('.tab-pane'),
+            settingsUsernameInput: document.getElementById('settings-username'),
+            settingsProfilePhotoPreview: document.getElementById('settings-profile-photo-preview'),
+            changePhotoButton: document.getElementById('change-photo-button'),
+            settingsProfilePhotoInput: document.getElementById('settings-profile-photo-input'),
+            saveProfileSettingsButton: document.getElementById('save-profile-settings'),
+            logoutButton: document.getElementById('logout-button'),
+            themeToggleBtn: document.getElementById('theme-toggle'),
+            htmlRoot: document.getElementById('html-root'),
+            // New Address DOM elements
+            addressList: document.getElementById('address-list'),
+            addressLabelInput: document.getElementById('address-label'),
+            addressRecipientNameInput: document.getElementById('address-recipient-name'),
+            addressPhoneInput: document.getElementById('address-phone'),
+            addressLine1Input: document.getElementById('address-line1'),
+            addressCityInput: document.getElementById('address-city'),
+            addressProvinceInput: document.getElementById('address-province'),
+            addressPostalCodeInput: document.getElementById('address-postal-code'),
+            saveAddressButton: document.getElementById('save-address-button'),
+            cancelEditAddressButton: document.getElementById('cancel-edit-address-button'),
+            // Order History & Notifications (existing, just adding to DOM object)
+            orderHistoryList: document.getElementById('order-history-list'),
+            notificationList: document.getElementById('notification-list')
+        };
+
+        const DEFAULTS = {
+            USERNAME: "Pengguna SHRIMPZONE",
+            PHOTO_URL: "https://placehold.co/120x120/cccccc/333333?text=Foto",
+            INITIAL_TAB: 'orders-packaging'
+        };
+
+        let editingAddressId = null; // To track which address is being edited
+
+        // --- Theme Management ---
+        const setTheme = (theme) => {
+            DOM.htmlRoot.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        };
+
+        const toggleTheme = () => {
+            const currentTheme = DOM.htmlRoot.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        };
+
+        // --- Profile Management ---
+        const loadProfile = () => {
+            // *** PERBAIKAN DI SINI: Baca dari 'loggedInUsername' ***
+            const savedUsername = localStorage.getItem('loggedInUsername'); 
+            const savedPhoto = localStorage.getItem('profilePhoto');
+
+            DOM.profileUsernameDisplay.textContent = savedUsername || DEFAULTS.USERNAME;
+            // Jika input pengaturan profil harus sama dengan yang di display utama, juga perbarui ini
+            DOM.settingsUsernameInput.value = savedUsername || ''; 
+            DOM.profilePhotoDisplay.src = savedPhoto || DEFAULTS.PHOTO_URL;
+            DOM.settingsProfilePhotoPreview.src = savedPhoto || DEFAULTS.PHOTO_URL;
+        };
+
+        const saveProfile = () => {
+            const newUsername = DOM.settingsUsernameInput.value.trim();
+            if (newUsername) {
+                // *** PERBAIKAN DI SINI: Simpan ke 'loggedInUsername' ***
+                localStorage.setItem('loggedInUsername', newUsername); 
+            } else {
+                localStorage.removeItem('loggedInUsername');
+            }
+
+            alert('Pengaturan profil berhasil disimpan!');
+            loadProfile(); // Muat ulang profil untuk melihat perubahan
+            showTab('profile-settings'); // Tetap di tab pengaturan setelah menyimpan
+        };
+
+        const handlePhotoUpload = (event, displayElement, storageKey) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    displayElement.src = e.target.result;
+                    localStorage.setItem(storageKey, e.target.result);
+                    alert('Foto profil berhasil diubah!');
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+
+        // --- Tab Navigation ---
+        const showTab = (tabId) => {
+            DOM.tabPanes.forEach(pane => pane.classList.add('hidden'));
+            document.getElementById(tabId).classList.remove('hidden');
+
+            DOM.tabButtons.forEach(button => button.classList.remove('active'));
+            const activeTabButton = document.querySelector(`.tab-button[data-tab="${tabId}"]`);
+            if (activeTabButton) {
+                activeTabButton.classList.add('active');
+            }
+            
+            // Special handling for address tab to load addresses
+            if (tabId === 'my-addresses') {
+                renderAddresses();
+            } else if (tabId === 'order-history') {
+                renderOrderHistory();
+            } else if (tabId === 'chat-notifications') {
+                renderNotifications();
+            }
+            // If navigating to profile-settings, ensure input is updated with current username
+            if (tabId === 'profile-settings') {
+                DOM.settingsUsernameInput.value = localStorage.getItem('loggedInUsername') || '';
+            }
+        };
+
+        // --- Address Management ---
+        const loadAddresses = () => {
+            return JSON.parse(localStorage.getItem('userAddresses')) || [];
+        };
+
+        const saveAddresses = (addresses) => {
+            localStorage.setItem('userAddresses', JSON.stringify(addresses));
+        };
+
+        const renderAddresses = () => {
+            const addresses = loadAddresses();
+            DOM.addressList.innerHTML = ''; // Clear current list
+
+            if (addresses.length === 0) {
+                DOM.addressList.innerHTML = '<p class="text-gray-600">Belum ada alamat tersimpan.</p>';
+            } else {
+                addresses.forEach(address => {
+                    const addressDiv = document.createElement('div');
+                    addressDiv.className = `address-item ${address.isDefault ? 'selected-address' : ''}`;
+                    addressDiv.dataset.id = address.id;
+                    addressDiv.innerHTML = `
+                        <div>
+                            <h4>${address.label} ${address.isDefault ? '<span class="text-xs text-blue-600 ml-2">(Utama)</span>' : ''}</h4>
+                            <p>${address.recipientName} - ${address.phone}</p>
+                            <p>${address.addressLine1}, ${address.city}, ${address.province} ${address.postalCode}</p>
+                        </div>
+                        <div class="address-actions">
+                            <button class="px-3 py-1 rounded-md text-sm font-semibold secondary-button edit-address-btn" data-id="${address.id}">Edit</button>
+                            <button class="px-3 py-1 rounded-md text-sm font-semibold primary-button set-default-address-btn ${address.isDefault ? 'hidden' : ''}" data-id="${address.id}">Set Utama</button>
+                            <button class="px-3 py-1 rounded-md text-sm font-semibold bg-red-500 hover:bg-red-600 text-white delete-address-btn" data-id="${address.id}">Hapus</button>
+                        </div>
+                    `;
+                    DOM.addressList.appendChild(addressDiv);
+                });
+
+                // Add event listeners for edit, set default, delete
+                document.querySelectorAll('.edit-address-btn').forEach(button => {
+                    button.addEventListener('click', (e) => editAddress(e.target.dataset.id));
+                });
+                document.querySelectorAll('.set-default-address-btn').forEach(button => {
+                    button.addEventListener('click', (e) => setDefaultAddress(e.target.dataset.id));
+                });
+                document.querySelectorAll('.delete-address-btn').forEach(button => {
+                    button.addEventListener('click', (e) => deleteAddress(e.target.dataset.id));
+                });
+            }
+
+            // Clear form after rendering or if no address is being edited
+            if (editingAddressId === null) {
+                clearAddressForm();
+                DOM.cancelEditAddressButton.classList.add('hidden');
+            }
+        };
+
+        const clearAddressForm = () => {
+            DOM.addressLabelInput.value = '';
+            DOM.addressRecipientNameInput.value = '';
+            DOM.addressPhoneInput.value = '';
+            DOM.addressLine1Input.value = '';
+            DOM.addressCityInput.value = '';
+            DOM.addressProvinceInput.value = '';
+            DOM.addressPostalCodeInput.value = '';
+            editingAddressId = null;
+            DOM.saveAddressButton.textContent = 'Simpan Alamat';
+            DOM.cancelEditAddressButton.classList.add('hidden');
+        };
+
+        const saveAddress = () => {
+            const newAddress = {
+                id: editingAddressId || Date.now().toString(), // Use existing ID or generate new
+                label: DOM.addressLabelInput.value.trim(),
+                recipientName: DOM.addressRecipientNameInput.value.trim(),
+                phone: DOM.addressPhoneInput.value.trim(),
+                addressLine1: DOM.addressLine1Input.value.trim(),
+                city: DOM.addressCityInput.value.trim(),
+                province: DOM.addressProvinceInput.value.trim(),
+                postalCode: DOM.addressPostalCodeInput.value.trim(),
+                isDefault: false // Will be handled by setDefaultAddress if needed
+            };
+
+            // Basic validation
+            if (!newAddress.label || !newAddress.recipientName || !newAddress.addressLine1 || !newAddress.city || !newAddress.province) {
+                alert('Harap isi semua kolom alamat yang wajib.');
+                return;
+            }
+
+            let addresses = loadAddresses();
+            if (editingAddressId) {
+                // Update existing address
+                addresses = addresses.map(addr => addr.id === editingAddressId ? { ...newAddress, isDefault: addr.isDefault } : addr);
+                alert('Alamat berhasil diperbarui!');
+            } else {
+                // Add new address
+                addresses.push(newAddress);
+                alert('Alamat berhasil ditambahkan!');
+            }
+
+            saveAddresses(addresses);
+            renderAddresses();
+            clearAddressForm(); // Clear form after save
+        };
+
+        const editAddress = (id) => {
+            const addresses = loadAddresses();
+            const addressToEdit = addresses.find(addr => addr.id === id);
+            if (addressToEdit) {
+                DOM.addressLabelInput.value = addressToEdit.label;
+                DOM.addressRecipientNameInput.value = addressToEdit.recipientName;
+                DOM.addressPhoneInput.value = addressToEdit.phone;
+                DOM.addressLine1Input.value = addressToEdit.addressLine1;
+                DOM.addressCityInput.value = addressToEdit.city;
+                DOM.addressProvinceInput.value = addressToEdit.province;
+                DOM.addressPostalCodeInput.value = addressToEdit.postalCode;
+                editingAddressId = id;
+                DOM.saveAddressButton.textContent = 'Perbarui Alamat';
+                DOM.cancelEditAddressButton.classList.remove('hidden');
+            }
+        };
+
+        const deleteAddress = (id) => {
+            if (confirm('Anda yakin ingin menghapus alamat ini?')) {
+                let addresses = loadAddresses();
+                addresses = addresses.filter(addr => addr.id !== id);
+                saveAddresses(addresses);
+                renderAddresses();
+                alert('Alamat berhasil dihapus!');
+            }
+        };
+
+        const setDefaultAddress = (id) => {
+            let addresses = loadAddresses();
+            addresses = addresses.map(addr => ({
+                ...addr,
+                isDefault: addr.id === id // Set this address as default, others as not default
+            }));
+            saveAddresses(addresses);
+            renderAddresses();
+            alert('Alamat utama berhasil diatur!');
+            // Also update the checkout address in localStorage for direct use by payment page
+            const defaultAddr = addresses.find(addr => addr.id === id);
+            if (defaultAddr) {
+                localStorage.setItem('checkoutAddress', `${defaultAddr.addressLine1}, ${defaultAddr.city}, ${defaultAddr.province}`);
+                localStorage.setItem('checkoutRecipientName', defaultAddr.recipientName);
+            }
+        };
+
+        // --- Order History Rendering (Moved from previous profile.html logic) ---
+        const renderOrderHistory = () => {
+            const orderHistory = JSON.parse(localStorage.getItem('orderHistory') || '[]');
+            DOM.orderHistoryList.innerHTML = ''; // Clear current list
+
+            if (orderHistory.length === 0) {
+                DOM.orderHistoryList.innerHTML = '<p class="text-gray-600">Tidak ada histori pemesanan yang tersedia.</p>';
+            } else {
+                orderHistory.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date, newest first
+
+                orderHistory.forEach(order => {
+                    const orderDiv = document.createElement('div');
+                    orderDiv.className = 'order-item';
+                    const orderDate = new Date(order.date).toLocaleDateString('id-ID', {
+                        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                    });
+                    const itemDetails = order.items.map(item =>
+                        `<p class="item-detail">${item.productName} (x${item.quantity}) - <span>Rp ${parseFloat(item.productPrice).toLocaleString('id-ID')}</span></p>`
+                    ).join('');
+
+                    orderDiv.innerHTML = `
+                        <h4>ID Pesanan: ${order.orderId}</h4>
+                        <p>Tanggal: ${orderDate}</p>
+                        <p>Total: Rp ${order.total.toLocaleString('id-ID')}</p>
+                        <p>Metode Pembayaran: ${formatPaymentMethodName(order.method)}</p>
+                        <p>Status: <span class="font-medium">${order.status}</span></p>
+                        <div class="mt-3">
+                            <p class="font-semibold">Detail Item:</p>
+                            ${itemDetails}
+                        </div>
+                    `;
+                    DOM.orderHistoryList.appendChild(orderDiv);
+                });
+            }
+        };
+
+        // Helper function for formatting payment method name (copied from payment page)
+        function formatPaymentMethodName(methodKey) {
+            switch(methodKey) {
+                case 'bank-transfer': return 'Transfer Bank';
+                case 'ewallet': return 'E-Wallet';
+                case 'credit-card': return 'Kartu Kredit/Debit';
+                case 'cod': return 'Cash On Delivery (COD)';
+                default: return 'Metode Tidak Diketahui';
+            }
+        }
+
+        // --- Notification Rendering (Moved from previous profile.html logic) ---
+        const renderNotifications = () => {
+            const notifications = JSON.parse(localStorage.getItem('userNotifications') || '[]');
+            DOM.notificationList.innerHTML = ''; // Clear current list
+
+            if (notifications.length === 0) {
+                DOM.notificationList.innerHTML = '<p class="text-gray-600">Tidak ada notifikasi chat baru.</p>';
+            } else {
+                notifications.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort by date, newest first
+
+                notifications.forEach(notif => {
+                    const notifDiv = document.createElement('div');
+                    notifDiv.className = `notification-item ${notif.read ? '' : 'unread'}`; // Add 'unread' class
+                    notifDiv.dataset.id = notif.id;
+
+                    const notifDate = new Date(notif.date).toLocaleString('id-ID', {
+                        year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                    });
+
+                    notifDiv.innerHTML = `
+                        <h4 class="flex justify-between items-center">
+                            <span>${notif.title}</span>
+                            ${notif.read ? '' : '<span class="text-xs font-normal text-blue-600">BARU</span>'}
+                        </h4>
+                        <p>${notif.message}</p>
+                        <p class="timestamp">${notifDate}</p>
+                    `;
+                    DOM.notificationList.appendChild(notifDiv);
+
+                    // Mark as read on click
+                    notifDiv.addEventListener('click', () => markNotificationAsRead(notif.id));
+                });
+            }
+        };
+
+        const markNotificationAsRead = (id) => {
+            let notifications = JSON.parse(localStorage.getItem('userNotifications') || '[]');
+            notifications = notifications.map(notif =>
+                notif.id === id ? { ...notif, read: true } : notif
+            );
+            localStorage.setItem('userNotifications', JSON.stringify(notifications));
+            renderNotifications(); // Re-render to update UI
+        };
+        
+        // --- Logout Functionality ---
+        const logout = () => {
+            if (confirm('Anda yakin ingin logout?')) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('loggedInUsername'); // Pastikan ini juga dihapus saat logout
+                localStorage.removeItem('loggedInUserId');
+                localStorage.removeItem('profileUsername'); // Hapus juga jika masih ada, untuk kebersihan
+                localStorage.removeItem('profilePhoto');
+                localStorage.removeItem('userAddresses'); 
+                localStorage.removeItem('checkoutAddress'); 
+                localStorage.removeItem('checkoutRecipientName'); 
+                alert('Anda telah berhasil logout.');
+                window.location.href = 'index.html';
+            }
+        };
+
+        // --- Event Listeners ---
+        DOM.editUsernameButton.addEventListener('click', () => showTab('profile-settings'));
+        DOM.editPhotoButton.addEventListener('click', () => DOM.profilePhotoInput.click());
+        DOM.profilePhotoInput.addEventListener('change', (e) => handlePhotoUpload(e, DOM.profilePhotoDisplay, 'profilePhoto'));
+        DOM.changePhotoButton.addEventListener('click', () => DOM.settingsProfilePhotoInput.click());
+        DOM.settingsProfilePhotoInput.addEventListener('change', (e) => handlePhotoUpload(e, DOM.settingsProfilePhotoPreview, 'profilePhoto'));
+        DOM.saveProfileSettingsButton.addEventListener('click', saveProfile);
+        DOM.logoutButton.addEventListener('click', logout);
+        DOM.tabButtons.forEach(button => {
+            button.addEventListener('click', () => showTab(button.dataset.tab));
+        });
+        if (DOM.themeToggleBtn) {
+            DOM.themeToggleBtn.addEventListener('click', toggleTheme);
+        }
+
+        // Address event listeners
+        DOM.saveAddressButton.addEventListener('click', saveAddress);
+        DOM.cancelEditAddressButton.addEventListener('click', clearAddressForm);
+
+        // --- Initialization on DOM Load ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is logged in
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = 'index.html'; // Redirect to login/home if not logged in
+                return;
+            }
+
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
+            loadProfile(); // Pastikan ini dipanggil setelah isLoggedIn divalidasi
+
+            // Check URL for specific tab to open (e.g., from payment page's "Ubah Alamat")
+            const urlParams = new URLSearchParams(window.location.search);
+            const openTab = urlParams.get('tab');
+            const editAddrId = urlParams.get('editAddressId');
+
+            if (openTab === 'my-addresses') {
+                showTab('my-addresses');
+                if (editAddrId) {
+                    editAddress(editAddrId);
+                }
+            } else {
+                showTab(DEFAULTS.INITIAL_TAB);
+            }
+        });
+    </script>
+</body>
+</html>

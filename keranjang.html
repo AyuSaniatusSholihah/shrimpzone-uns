@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang Belanja - SHRIMPZONE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        /* Top Bar styles - Consistent with other pages */
+        .top-bar {
+            background-color: #f59e0b; /* bg-orange-500 */
+            color: white;
+            padding: 8px 0;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Main Navigation styles - Adapted for Cart page */
+        .main-nav {
+            background-color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem; /* Tailwind's gap-4 */
+        }
+
+        .nav-left, .nav-right, .nav-title-center { /* Changed nav-center to nav-title-center */
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-left {
+            flex-shrink: 0;
+            gap: 0.5rem; /* Gap between back button and logo */
+        }
+        
+        /* New style for the centered title container */
+        .nav-title-center {
+            flex-grow: 1; /* Allow it to take available space */
+            justify-content: center; /* Center content horizontally */
+            text-align: center; /* Ensure text itself is centered */
+            position: absolute; /* Position absolut untuk menengahkan tanpa mempengaruhi flexflow */
+            left: 50%;
+            transform: translateX(-50%);
+            width: fit-content; /* Make width fit content */
+            white-space: nowrap; /* Prevent title from wrapping */
+            z-index: 10; /* Ensure it's above other elements if they overlap slightly */
+        }
+
+        /* Hide search bar for this specific page */
+        .nav-center-hidden {
+            display: none;
+        }
+
+        .nav-right {
+            flex-shrink: 0;
+            gap: 1rem; /* Gap between hotline and icon group */
+            position: relative; /* Make sure it doesn't overlap with absolute title */
+            z-index: 20; /* Higher z-index to be on top */
+            margin-left: auto; /* Push to the right */
+        }
+
+        .hotline {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1f2937;
+            white-space: nowrap;
+        }
+
+        .icon-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-group a, .icon-group i {
+            font-size: 1.25rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+
+        .icon-group a:hover, .icon-group i:hover {
+            color: #2563eb;
+        }
+        
+        .logo {
+            height: 40px;
+            width: auto;
+        }
+
+        .back-button {
+            color: #4b5563;
+            font-size: 1.25rem;
+            transition: color 0.2s;
+        }
+        .back-button:hover {
+            color: #2563eb;
+        }
+
+        /* Cart specific styles */
+        .cart-item-card {
+            @apply bg-white p-4 rounded-lg shadow-sm flex items-center space-x-4;
+        }
+        .cart-item-image {
+            @apply w-20 h-20 object-cover rounded-md flex-shrink-0;
+        }
+        .quantity-control {
+            @apply flex items-center space-x-2;
+        }
+        .quantity-button {
+            @apply bg-gray-200 hover:bg-gray-300 text-gray-700 w-8 h-8 rounded-full flex items-center justify-center transition duration-200;
+        }
+        .quantity-input {
+            @apply w-12 text-center border border-gray-300 rounded-md py-1;
+        }
+        .remove-item-button {
+            @apply text-red-500 hover:text-red-600 ml-auto;
+        }
+        .checkout-button {
+            @apply bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200 w-full;
+        }
+    </style>
+</head>
+<body>
+    <header class="top-bar">
+        <div class="top-bar-content">
+            <span class="discount-banner"></span>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-left">
+            <a href="javascript:history.back()" class="back-button">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </a>
+            <img src="images/logo.png" alt="Logo SHRIMPZONE" class="logo">
+        </div>
+        
+        <div class="nav-title-center">
+            <h1 class="text-2xl font-bold text-gray-800">Keranjang Belanja</h1>
+        </div>
+
+        <div class="nav-center nav-center-hidden">
+            <input type="text" placeholder="Search anything..." class="search-input">
+            <button class="search-button"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="nav-right">
+            <span class="hotline">Hotline 24/7 (025) 3688 25 16</span>
+            <div class="icon-group">
+                <a href="masuk.html"><i class="fas fa-user"></i></a>
+                <a href="notifikasi.html"><i class="fas fa-bell"></i></a>
+                <a href="#"><i class="fas fa-moon"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-2">
+                <div id="cart-items-list" class="space-y-4">
+                    </div>
+                <div id="empty-cart-message" class="hidden text-center text-gray-600 mt-12">
+                    <p class="text-xl font-semibold mb-4">Keranjang Anda kosong.</p>
+                    <p>Ayo <a href="belanjasekarang.html" class="text-blue-600 hover:underline">mulai belanja</a> sekarang!</p>
+                </div>
+            </div>
+
+            <div class="md:col-span-1">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Ringkasan Pesanan</h2>
+                    <div class="space-y-2 text-gray-700">
+                        <div class="flex justify-between">
+                            <span>Subtotal (<span id="total-items">0</span> item)</span>
+                            <span id="subtotal-price">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Biaya Pengiriman</span>
+                            <span>Rp <span id="shipping-cost-display">15.000</span></span>
+                        </div>
+                        <div class="border-t border-gray-200 pt-2 mt-2 flex justify-between font-bold text-lg">
+                            <span>Total</span>
+                            <span id="total-price">Rp 15.000</span>
+                        </div>
+                    </div>
+                    <a href="pembayarankeranjang.html" id="checkout-link" class="block mt-6">
+                        <button id="checkout-button" class="checkout-button">
+                            Lanjut ke Pembayaran
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const cartItemsList = document.getElementById('cart-items-list');
+        const emptyCartMessage = document.getElementById('empty-cart-message');
+        const subtotalPriceDisplay = document.getElementById('subtotal-price');
+        const totalPriceDisplay = document.getElementById('total-price');
+        const totalItemsDisplay = document.getElementById('total-items');
+        const shippingCostDisplay = document.getElementById('shipping-cost-display');
+        const checkoutButton = document.getElementById('checkout-button');
+        const checkoutLink = document.getElementById('checkout-link');
+        
+        const SHIPPING_COST = 15000;
+
+        function loadCartItems() {
+            let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+            cartItemsList.innerHTML = '';
+            let subtotal = 0;
+            let totalItems = 0;
+
+            if (cart.length === 0) {
+                emptyCartMessage.classList.remove('hidden');
+                checkoutButton.disabled = true;
+                checkoutLink.href = "#";
+                checkoutButton.textContent = "Keranjang Kosong";
+            } else {
+                emptyCartMessage.classList.add('hidden');
+                checkoutButton.disabled = false;
+                checkoutLink.href = "pembayarankeranjang.html"; // Ensure correct path
+                checkoutButton.textContent = "Lanjut ke Pembayaran";
+
+                cart.forEach(item => {
+                    const itemPrice = typeof item.productPrice === 'string' ? parseFloat(item.productPrice) : item.productPrice;
+                    const itemTotal = itemPrice * item.quantity;
+                    subtotal += itemTotal;
+                    totalItems += item.quantity;
+
+                    const cartItemCard = document.createElement('div');
+                    cartItemCard.className = 'cart-item-card';
+                    const imageUrl = item.image || 'https://placehold.co/80x80/cccccc/333333?text=No+Image';
+
+                    cartItemCard.innerHTML = `
+                        <img src="${imageUrl}" alt="${item.productName}" class="cart-item-image">
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-800">${item.productName}</h3>
+                            <p class="text-blue-600 font-bold">Rp ${itemPrice.toLocaleString('id-ID')}</p>
+                        </div>
+                        <div class="quantity-control">
+                            <button class="quantity-button decrease-qty" data-id="${item.productId}" data-variant="${item.variantWeight || ''}">-</button>
+                            <input type="number" value="${item.quantity}" min="1" class="quantity-input" data-id="${item.productId}" data-variant="${item.variantWeight || ''}">
+                            <button class="quantity-button increase-qty" data-id="${item.productId}" data-variant="${item.variantWeight || ''}">+</button>
+                        </div>
+                        <span class="font-semibold text-gray-800 w-24 text-right">Rp ${itemTotal.toLocaleString('id-ID')}</span>
+                        <button class="remove-item-button" data-id="${item.productId}" data-variant="${item.variantWeight || ''}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    `;
+                    cartItemsList.appendChild(cartItemCard);
+                });
+
+                subtotalPriceDisplay.textContent = `Rp ${subtotal.toLocaleString('id-ID')}`;
+                totalItemsDisplay.textContent = totalItems;
+                shippingCostDisplay.textContent = SHIPPING_COST.toLocaleString('id-ID');
+                totalPriceDisplay.textContent = `Rp ${(subtotal + SHIPPING_COST).toLocaleString('id-ID')}`;
+
+                document.querySelectorAll('.increase-qty').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const productId = parseInt(this.dataset.id);
+                        const variantWeight = this.dataset.variant;
+                        updateQuantity(productId, variantWeight, 1);
+                    });
+                });
+                document.querySelectorAll('.decrease-qty').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const productId = parseInt(this.dataset.id);
+                        const variantWeight = this.dataset.variant;
+                        updateQuantity(productId, variantWeight, -1);
+                    });
+                });
+                document.querySelectorAll('.quantity-input').forEach(input => {
+                    input.addEventListener('change', function() {
+                        const productId = parseInt(this.dataset.id);
+                        const variantWeight = this.dataset.variant;
+                        const newValue = Math.max(1, parseInt(this.value) || 1); 
+                        updateQuantity(productId, variantWeight, 0, newValue); 
+                    });
+                });
+                document.querySelectorAll('.remove-item-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const productId = parseInt(this.dataset.id);
+                        const variantWeight = this.dataset.variant;
+                        removeItem(productId, variantWeight);
+                    });
+                });
+            }
+        }
+
+        function updateQuantity(productId, variantWeight, delta, directValue = null) {
+            let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+            const itemIndex = cart.findIndex(item => item.productId === productId && item.variantWeight === variantWeight);
+
+            if (itemIndex !== -1) {
+                if (directValue !== null) {
+                    cart[itemIndex].quantity = directValue;
+                } else {
+                    cart[itemIndex].quantity += delta;
+                }
+                
+                if (cart[itemIndex].quantity < 1) {
+                    cart[itemIndex].quantity = 1;
+                }
+                
+                localStorage.setItem('shoppingCart', JSON.stringify(cart));
+                loadCartItems();
+            }
+        }
+
+        function removeItem(productId, variantWeight) {
+            let cart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+            cart = cart.filter(item => !(item.productId === productId && item.variantWeight === variantWeight));
+            localStorage.setItem('shoppingCart', JSON.stringify(cart));
+            loadCartItems();
+        }
+
+        checkoutLink.addEventListener('click', (event) => {
+            const currentCart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+            if (currentCart.length === 0) {
+                alert('Keranjang Anda kosong. Tambahkan produk terlebih dahulu.');
+                event.preventDefault();
+                return;
+            }
+
+            let subtotal = 0;
+            currentCart.forEach(item => {
+                const itemPrice = typeof item.productPrice === 'string' ? parseFloat(item.productPrice) : item.productPrice;
+                subtotal += itemPrice * item.quantity;
+            });
+            const finalTotal = subtotal + SHIPPING_COST;
+
+            localStorage.setItem('paymentTotal', finalTotal);
+            localStorage.setItem('currentOrderItems', JSON.stringify(currentCart));
+            
+            localStorage.setItem('checkoutAddress', 'Jl. Contoh Alamat No. 123, Rembang, Jawa Tengah'); 
+            localStorage.setItem('checkoutRecipientName', 'Pelanggan SHRIMPZONE'); 
+        });
+
+        document.addEventListener('DOMContentLoaded', loadCartItems);
+
+        // --- Dummy Data for Testing (Uncomment to test with pre-filled cart) ---
+        // if ((JSON.parse(localStorage.getItem('shoppingCart') || '[]')).length === 0) {
+        //     localStorage.setItem('shoppingCart', JSON.stringify([
+        //         { productId: 1, productName: 'Udang Vaname Segar (200g)', productPrice: 20000, quantity: 1, image: 'images/udangvename.png', variantWeight: '200g' },
+        //         { productId: 2, productName: 'Udang Windu Ukuran Besar (1000g)', productPrice: 125000, quantity: 2, image: 'images/udang windu.jpg', variantWeight: '1000g' }
+        //     ]));
+        //     loadCartItems();
+        // }
+    </script>
+</body>
+</html>

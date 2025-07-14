@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Produk Udang - SHRIMPZONE</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Anda bisa tetap menyertakan style.css jika ada kustomisasi lain yang relevan untuk header ini -->
+    <!-- <link rel="stylesheet" href="style.css"> -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        /* Custom CSS for header elements (if not using Tailwind classes directly) */
+        .top-bar {
+            background-color: #ffffff; /* blue-600 */
+            color: white;
+            padding: 0.5rem 0;
+            text-align: center;
+        }
+        .main-nav {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+        }
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+        }
+        .nav-left .back-button {
+            margin-right: 1rem;
+            color: #4b5563; /* gray-600 */
+            font-size: 1.5rem;
+        }
+        .nav-left .logo {
+            height: 40px; /* Adjust as needed */
+            margin-right: 0.5rem;
+        }
+        .nav-center {
+            flex-grow: 1;
+            margin: 0 1rem;
+            display: flex;
+            max-width: 500px; /* Limit search bar width */
+        }
+        .search-input {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 0.375rem; /* rounded-md */
+            outline: none;
+        }
+        .search-button {
+            background-color: #2563eb; /* blue-600 */
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            margin-left: 0.5rem;
+        }
+        .hotline {
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* gray-600 */
+            margin-right: 1rem;
+            white-space: nowrap;
+        }
+        .icon-group i {
+            font-size: 1.25rem; /* text-xl */
+            color: #4b5563; /* gray-600 */
+            margin-left: 1rem;
+            cursor: pointer;
+        }
+        .content-wrapper {
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .page-title {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            color: #1f2937; /* gray-900 */
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Responsive grid */
+            gap: 1.5rem; /* gap-6 */
+        }
+        .product-card {
+            background-color: white;
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+            overflow: hidden;
+            transition: transform 0.2s ease-in-out;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        .product-card img {
+            width: 100%;
+            height: 200px; /* h-48 */
+            object-fit: cover;
+        }
+        .product-card-body {
+            padding: 1rem; /* p-4 */
+        }
+        .product-card-title {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            color: #1f2937; /* gray-900 */
+            margin-bottom: 0.25rem;
+        }
+        .product-card-price {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            color: #2563eb; /* blue-600 */
+            margin-bottom: 0.5rem;
+        }
+        .product-card-address {
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* gray-600 */
+            margin-top: 0.5rem;
+        }
+        .product-card-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem; /* space-x-2 */
+            margin-top: 1rem;
+        }
+        .product-card-actions button {
+            padding: 0.375rem 0.75rem; /* py-1 px-3 */
+            font-size: 0.875rem; /* text-sm */
+            font-weight: 500; /* font-medium */
+            border-radius: 0.375rem; /* rounded-md */
+            transition: background-color 0.2s ease-in-out;
+        }
+        .product-card-actions .delete-btn {
+            background-color: #ef4444; /* red-500 */
+            color: white;
+        }
+        .product-card-actions .delete-btn:hover {
+            background-color: #dc2626; /* red-600 */
+        }
+        .product-card-actions .edit-btn {
+            background-color: #f59e0b; /* yellow-500 */
+            color: white;
+        }
+        .product-card-actions .edit-btn:hover {
+            background-color: #d97706; /* yellow-600 */
+        }
+        #no-products-message {
+            text-align: center;
+            color: #4b5563; /* gray-600 */
+            margin-top: 3rem;
+        }
+        #no-products-message p {
+            margin-bottom: 1rem;
+        }
+        #no-products-message a {
+            color: #2563eb; /* blue-600 */
+            text-decoration: underline;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .main-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .nav-center {
+                width: 100%;
+                margin: 1rem 0;
+            }
+            .hotline {
+                display: none; /* Hide hotline on small screens */
+            }
+            .icon-group {
+                margin-top: 1rem;
+                width: 100%;
+                justify-content: space-around;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="top-bar">
+        <div class="top-bar-content">
+            <span class="discount-banner"></span>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-left">
+            <a href="index.html" class="back-button" onclick="history.back()"><i class="fas fa-arrow-left"></i></a>
+            <img src="images/logo.png" alt="Logo SHRIMPZONE" class="logo">
+        </div>
+        <div class="nav-center">
+            <input type="text" placeholder="Search anything..." class="search-input">
+            <button class="search-button"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="nav-right">
+            <span class="hotline">Hotline 24/7 (025) 3688 25 16</span>
+            <div class="icon-group">
+                <a href="profile.html"><i class="fas fa-user"></i></a>
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+        <h1 class="page-title">Produk yang Saya Jual</h1>
+
+        <div class="flex justify-end mb-6">
+            <a href="daftar-jual.html" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200">
+                + Jual Produk Baru
+            </a>
+        </div>
+
+        <div class="product-grid" id="product-grid">
+            <!-- Product cards will be dynamically inserted here by JavaScript -->
+        </div>
+
+        <div id="no-products-message" class="hidden">
+            <p class="text-xl font-semibold mb-4">Anda belum memiliki produk yang dijual.</p>
+            <p>Ayo <a href="daftar-jual.html" class="text-blue-600 hover:underline">jual produk pertama Anda</a> sekarang!</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const productGrid = document.getElementById('product-grid');
+            const noProductsMessage = document.getElementById('no-products-message');
+
+            // Fungsi untuk memuat dan menampilkan produk
+            function loadProducts() {
+                const products = JSON.parse(localStorage.getItem('shrimpzoneProducts')) || [];
+                productGrid.innerHTML = ''; // Bersihkan grid sebelum menambahkan produk
+
+                if (products.length === 0) {
+                    noProductsMessage.classList.remove('hidden'); // Tampilkan pesan jika tidak ada produk
+                } else {
+                    noProductsMessage.classList.add('hidden'); // Sembunyikan pesan jika ada produk
+                    products.forEach(product => {
+                        const productCard = document.createElement('div');
+                        productCard.className = 'product-card';
+                        productCard.innerHTML = `
+                            <img src="${product.imagePreviews[0] || 'https://placehold.co/400x300/cccccc/333333?text=No+Image'}" alt="${product.productName}">
+                            <div class="product-card-body">
+                                <h3 class="product-card-title">${product.productName}</h3>
+                                <p class="product-card-price">Rp ${product.price.toLocaleString('id-ID')}</p>
+                                <p class="product-card-address">Stok: ${product.stock} | Berat: ${product.weight} ${product.weightUnit}</p>
+                                <p class="product-card-address">${product.address.city}, ${product.address.province}</p>
+                                <div class="product-card-actions">
+                                    <button class="delete-btn" data-id="${product.id}">
+                                        Hapus
+                                    </button>
+                                    <button class="edit-btn" data-id="${product.id}">
+                                        Edit
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        productGrid.appendChild(productCard);
+                    });
+
+                    // Tambahkan event listener untuk tombol hapus
+                    document.querySelectorAll('.delete-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const productIdToDelete = parseInt(this.dataset.id);
+                            if (confirm('Anda yakin ingin menghapus produk ini?')) {
+                                let currentProducts = JSON.parse(localStorage.getItem('shrimpzoneProducts')) || [];
+                                const updatedProducts = currentProducts.filter(p => p.id !== productIdToDelete);
+                                localStorage.setItem('shrimpzoneProducts', JSON.stringify(updatedProducts));
+                                loadProducts(); // Muat ulang produk setelah penghapusan
+                            }
+                        });
+                    });
+
+                    // Tambahkan event listener untuk tombol edit
+                    document.querySelectorAll('.edit-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const productIdToEdit = parseInt(this.dataset.id);
+                            // Mengarahkan ke halaman jual (index.html) dengan parameter edit
+                            window.location.href = `daftar-jual.html?edit=${productIdToEdit}`;
+                        });
+                    });
+                }
+            }
+
+            // Panggil fungsi loadProducts saat halaman dimuat
+            loadProducts();
+        });
+    </script>
+</body>
+</html>

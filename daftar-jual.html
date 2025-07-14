@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wireframe Menu Jual - SHRIMPZONE</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for dashed border */
+        .dashed-border {
+            border: 2px dashed #cbd5e0; /* border-gray-300 */
+        }
+        .dashed-border:hover {
+            border-color: #93c5fd; /* hover:border-blue-300 */
+        }
+        /* Hide default file input */
+        .hidden-file-input {
+            display: none;
+        }
+    </style>
+</head>
+<body
+class="bg-gray-100 min-h-screen py-8">
+    <!-- Page Header with Back Button -->
+    <header class="page-header">
+        <div class="container mx-auto px-4">
+            <a href="iconjual.html" onclick="history.back()" class="back-button">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </a>
+    </header>
+    <div class="container mx-auto px-4 max-w-4xl">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8 text-center">Jual Produk Baru</h1>
+
+        <form id="sellProductForm" class="space-y-6">
+            <!-- Form Section: Upload Gambar -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">1. Unggah Gambar Produk</h2>
+                <div id="upload-area" class="dashed-border rounded-lg p-8 text-center cursor-pointer hover:bg-gray-50 transition duration-200">
+                    <i class="fas fa-cloud-upload-alt text-5xl text-gray-400 mb-4"></i>
+                    <p class="text-gray-600 mb-2">Seret dan lepas gambar di sini, atau</p>
+                    <button type="button" id="select-image-button" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-4 rounded-md transition duration-200">
+                        Pilih Gambar
+                    </button>
+                    <p class="text-sm text-gray-500 mt-2">Maks. 9 gambar, ukuran maks. 5MB per gambar</p>
+                </div>
+                <input type="file" id="productImages" name="productImages" accept="image/*" multiple class="hidden-file-input">
+                
+                <div id="image-previews" class="mt-4 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                    <!-- Image previews will be inserted here by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Form Section: Detail Produk -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">2. Detail Produk</h2>
+                <div class="mb-4">
+                    <label for="product-name" class="block text-gray-700 text-sm font-medium mb-2">Nama Produk</label>
+                    <input type="text" id="product-name" name="productName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Udang Vaname Segar Premium 1 Kg" required>
+                </div>
+                <div class="mb-4">
+                    <label for="product-description" class="block text-gray-700 text-sm font-medium mb-2">Deskripsi Produk</label>
+                    <textarea id="product-description" name="productDescription" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Jelaskan produk Anda secara detail..."></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="product-category" class="block text-gray-700 text-sm font-medium mb-2">Kategori</label>
+                    <select id="product-category" name="productCategory" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">Pilih Kategori</option>
+                        <option value="udang-vaname">Udang Vaname</option>
+                        <option value="udang-windu">Udang Windu</option>
+                        <option value="udang-putih">Udang Putih</option>
+                        <option value="udang-galah">Udang Galah</option>
+                        <option value="olahan-udang">Produk Olahan Udang</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Form Section: Cantumkan Alamat -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">3. Cantumkan Alamat Pengambilan/Pengiriman</h2>
+                <div class="mb-4">
+                    <label for="address-line1" class="block text-gray-700 text-sm font-medium mb-2">Alamat Lengkap</label>
+                    <input type="text" id="address-line1" name="addressLine1" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nama jalan, nomor rumah/gedung" required>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="city" class="block text-gray-700 text-sm font-medium mb-2">Kota</label>
+                        <input type="text" id="city" name="city" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Surakarta" required>
+                    </div>
+                    <div>
+                        <label for="postal-code" class="block text-gray-700 text-sm font-medium mb-2">Kode Pos</label>
+                        <input type="text" id="postal-code" name="postalCode" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: 57123" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="province" class="block text-gray-700 text-sm font-medium mb-2">Provinsi</label>
+                    <input type="text" id="province" name="province" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Jawa Tengah" required>
+                </div>
+                <div class="bg-gray-100 h-48 rounded-md flex items-center justify-center text-gray-500">
+                    [Placeholder Peta Lokasi]
+                </div>
+            </div>
+
+            <!-- Form Section: Detail Harga & Berat -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-xl font-semibold text-gray-700 mb-4">4. Detail Harga & Berat</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="price" class="block text-gray-700 text-sm font-medium mb-2">Harga (Rp)</label>
+                        <input type="number" id="price" name="price" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: 95000" min="0" required>
+                    </div>
+                    <div>
+                        <label for="stock" class="block text-gray-700 text-sm font-medium mb-2">Stok</label>
+                        <input type="number" id="stock" name="stock" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Jumlah stok" min="0" required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label for="weight" class="block text-gray-700 text-sm font-medium mb-2">Berat (per unit)</label>
+                    <div class="flex">
+                        <input type="number" id="weight" name="weightValue" class="w-full px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: 1000" min="0" required>
+                        <select id="weight-unit" name="weightUnit" class="px-3 py-2 border border-gray-300 rounded-r-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="gram">Gram</option>
+                            <option value="kg">Kg</option>
+                        </select>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-1">Berat per unit produk (misal: 1000 gram untuk 1 Kg)</p>
+                </div>
+                <div class="mb-4">
+                    <label for="min-order" class="block text-gray-700 text-sm font-medium mb-2">Minimum Pemesanan</label>
+                    <input type="number" id="min-order" name="minOrder" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: 1" min="1" required>
+                    <p class="text-sm text-gray-500 mt-1">Jumlah minimum produk yang bisa dipesan</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-end space-x-4">
+                <button type="button" id="cancel-button" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium py-3 px-6 rounded-lg transition duration-200">
+                    Batalkan
+                </button>
+                <button type="submit" id="publish-button" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200">
+                    Terbitkan Produk
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const sellProductForm = document.getElementById('sellProductForm');
+        const productImagesInput = document.getElementById('productImages');
+        const selectImageButton = document.getElementById('select-image-button');
+        const uploadArea = document.getElementById('upload-area');
+        const imagePreviewsContainer = document.getElementById('image-previews');
+        const MAX_IMAGES = 9;
+        const MAX_FILE_SIZE_MB = 5; // 5MB per image
+        let uploadedFiles = []; // Array to store File objects for previews
+
+        // --- Fungsi untuk memperbarui pratinjau gambar ---
+        function updateImagePreviews() {
+            imagePreviewsContainer.innerHTML = ''; // Bersihkan pratinjau yang ada
+
+            uploadedFiles.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.className = 'relative w-full h-24 bg-gray-200 rounded-md flex items-center justify-center text-gray-500 text-xs overflow-hidden';
+                    imgDiv.innerHTML = `
+                        <img src="${e.target.result}" alt="Pratinjau Gambar ${index + 1}" class="w-full h-full object-cover">
+                        <button type="button" class="absolute top-1 right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs remove-image-btn" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    imagePreviewsContainer.appendChild(imgDiv);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Tambahkan tombol '+' jika jumlah gambar kurang dari MAX_IMAGES
+            if (uploadedFiles.length < MAX_IMAGES) {
+                const addBtn = document.createElement('div');
+                addBtn.className = 'w-full h-24 bg-gray-200 rounded-md flex items-center justify-center text-gray-500 text-4xl cursor-pointer hover:bg-gray-300 transition duration-200';
+                addBtn.innerHTML = '<i class="fas fa-plus"></i>'; // Ikon plus
+                addBtn.onclick = () => productImagesInput.click();
+                imagePreviewsContainer.appendChild(addBtn);
+            }
+
+            // Tambahkan event listener untuk tombol hapus
+            document.querySelectorAll('.remove-image-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const indexToRemove = parseInt(this.dataset.index);
+                    uploadedFiles.splice(indexToRemove, 1); // Hapus file dari array
+                    updateImagePreviews(); // Perbarui tampilan
+                });
+            });
+        }
+
+        // --- Event Listener untuk tombol "Pilih Gambar" ---
+        selectImageButton.addEventListener('click', () => {
+            productImagesInput.click(); // Memicu klik pada input file tersembunyi
+        });
+
+        // --- Event Listener untuk perubahan input file ---
+        productImagesInput.addEventListener('change', (event) => {
+            const files = Array.from(event.target.files);
+            let newFiles = [];
+
+            files.forEach(file => {
+                // Validasi ukuran file
+                if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+                    alert(`Ukuran file ${file.name} melebihi batas ${MAX_FILE_SIZE_MB}MB.`);
+                    return; // Lewati file ini
+                }
+                // Validasi tipe file (sudah diatur di 'accept' atribut, tapi baik untuk validasi tambahan)
+                if (!file.type.startsWith('image/')) {
+                    alert(`File ${file.name} bukan gambar.`);
+                    return; // Lewati file ini
+                }
+                newFiles.push(file);
+            });
+
+            // Gabungkan file baru dengan yang sudah ada, batasi hingga MAX_IMAGES
+            uploadedFiles = [...uploadedFiles, ...newFiles].slice(0, MAX_IMAGES);
+            updateImagePreviews();
+        });
+
+        // --- Event Listener untuk Drag & Drop ---
+        uploadArea.addEventListener('dragover', (event) => {
+            event.preventDefault(); // Mencegah perilaku default browser
+            uploadArea.classList.add('border-blue-500', 'bg-blue-50'); // Efek visual saat drag
+        });
+
+        uploadArea.addEventListener('dragleave', (event) => {
+            uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
+        });
+
+        uploadArea.addEventListener('drop', (event) => {
+            event.preventDefault();
+            uploadArea.classList.remove('border-blue-500', 'bg-blue-50');
+
+            const files = Array.from(event.dataTransfer.files);
+            let newFiles = [];
+
+            files.forEach(file => {
+                if (file.type.startsWith('image/') && file.size <= MAX_FILE_SIZE_MB * 1024 * 1024) {
+                    newFiles.push(file);
+                } else {
+                    alert(`File ${file.name} tidak valid (bukan gambar atau terlalu besar).`);
+                }
+            });
+
+            uploadedFiles = [...uploadedFiles, ...newFiles].slice(0, MAX_IMAGES);
+            updateImagePreviews();
+        });
+
+        // --- Event Listener untuk Submit Formulir ---
+        sellProductForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Mencegah pengiriman formulir default
+
+            // Kumpulkan semua data dari formulir
+            const productData = {
+                id: Date.now(), // ID unik sederhana
+                productName: document.getElementById('product-name').value,
+                productDescription: document.getElementById('product-description').value,
+                productCategory: document.getElementById('product-category').value,
+                address: {
+                    addressLine1: document.getElementById('address-line1').value,
+                    city: document.getElementById('city').value,
+                    postalCode: document.getElementById('postal-code').value,
+                    province: document.getElementById('province').value
+                },
+                price: parseFloat(document.getElementById('price').value),
+                stock: parseInt(document.getElementById('stock').value),
+                weight: parseFloat(document.getElementById('weight').value),
+                weightUnit: document.getElementById('weight-unit').value,
+                minOrder: parseInt(document.getElementById('min-order').value),
+                // Untuk gambar, kita akan menyimpan URL Data (base64) untuk simulasi
+                imagePreviews: [], 
+                createdAt: new Date().toISOString()
+            };
+
+            // Konversi gambar ke Base64 untuk disimpan di localStorage (HANYA UNTUK SIMULASI)
+            const imagePromises = uploadedFiles.map(file => {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.readAsDataURL(file);
+                });
+            });
+
+            Promise.all(imagePromises).then(base64Images => {
+                productData.imagePreviews = base64Images;
+
+                // --- Simpan data ke localStorage ---
+                let products = JSON.parse(localStorage.getItem('shrimpzoneProducts')) || [];
+                products.push(productData);
+                localStorage.setItem('shrimpzoneProducts', JSON.stringify(products));
+
+                // Arahkan ke halaman daftar-jual.html
+                window.location.href = 'daftar-jual.html';
+
+            }).catch(error => {
+                console.error("Gagal mengonversi gambar:", error);
+                alert("Gagal menerbitkan produk karena masalah gambar.");
+            });
+        });
+
+        // --- Event Listener untuk tombol "Batalkan" ---
+        document.getElementById('cancel-button').addEventListener('click', () => {
+            if (confirm('Anda yakin ingin membatalkan? Semua perubahan akan hilang.')) {
+                sellProductForm.reset();
+                uploadedFiles = [];
+                updateImagePreviews();
+            }
+        });
+
+        // Inisialisasi pratinjau gambar saat halaman dimuat
+        updateImagePreviews();
+    </script>
+</body>
+</html>

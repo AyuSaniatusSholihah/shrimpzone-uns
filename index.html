@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHRIMPZONE - Udang Berkualitas Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Custom styles for mobile menu */
+        .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        /* Changed max-height for smooth transition - will be set dynamically by JS */
+        .mobile-menu.open {
+            max-height: 500px; /* A sufficiently large value to accommodate content */
+        }
+        .auth-button {
+            @apply px-4 py-2 rounded-lg font-semibold transition duration-200;
+        }
+        .login-button {
+            @apply text-blue-600 border border-blue-600 hover:bg-blue-50;
+        }
+        .jual-button {
+            @apply bg-blue-600 text-white hover:bg-blue-700;
+        }
+        .auth-button-mobile {
+            @apply block px-3 py-2 rounded-md text-base font-medium text-white bg-blue-600 hover:bg-blue-700 text-center;
+        }
+        .btn-primary {
+            @apply bg-blue-600 text-white hover:bg-blue-700;
+        }
+        .btn-secondary {
+            @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+        }
+        .hero-overlay {
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .product-card {
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card img {
+            flex-shrink: 0;
+        }
+        .product-card .p-4 {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Styles for Blog/Article Cards */
+        .blog-card {
+            transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+            cursor: pointer;
+            @apply bg-white rounded-lg shadow-sm overflow-hidden border border-gray-100; /* Apply common styles */
+            flex-shrink: 0; /* Important for slider: prevent cards from shrinking */
+        }
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        /* Animation on click (active state) */
+        .blog-card:active {
+            transform: translateY(2px) scale(0.98); /* Sedikit menekan ke bawah dan mengecil */
+            box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.06); /* Bayangan lebih tipis */
+        }
+
+        /* NEW: Blog Slider Specific Styles */
+        .blog-slider-container {
+            position: relative;
+            max-width: 1200px; /* Adjust as needed */
+            margin: 0 auto;
+            overflow: hidden; /* Important for hiding extra slides */
+        }
+        .blog-slider-wrapper {
+            display: flex;
+            transition: transform 0.5s ease-in-out; /* Smooth slide animation */
+        }
+        .blog-slide-item {
+            /* flex-shrink-0 and width adjusted by JS for responsiveness */
+            padding: 0.5rem; /* Space between cards */
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+
+        /* Slider Navigation Buttons */
+        .slider-nav-button {
+            @apply absolute top-1/2 -translate-y-1/2 bg-white p-3 rounded-full shadow-md text-gray-700 hover:bg-gray-100 focus:outline-none transition-colors duration-200;
+            z-index: 10;
+        }
+        .slider-nav-button.left {
+            left: -1.5rem; /* Adjust positioning */
+        }
+        .slider-nav-button.right {
+            right: -1.5rem; /* Adjust positioning */
+        }
+        @media (max-width: 767px) { /* Adjust for mobile, move buttons inside container */
+            .slider-nav-button.left { left: 0.5rem; }
+            .slider-nav-button.right { right: 0.5rem; }
+        }
+
+        /* Slider Dots */
+        .slider-dots {
+            @apply flex justify-center space-x-2 mt-8;
+        }
+        .slider-dot {
+            @apply w-3 h-3 bg-gray-300 rounded-full cursor-pointer hover:bg-gray-400 transition-colors duration-200;
+        }
+        .slider-dot.active {
+            @apply bg-blue-600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="sticky top-0 z-50 bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center flex-shrink-0">
+                    <a href="index.html">
+                        <img src="images/logo.png" alt="SHRIMPZONE" width="120">
+                    </a>
+                    <span class="text-xl font-bold text-gray-800 ml-2 whitespace-nowrap">SHRIMPZONE</span>
+                </div>
+
+                <div class="hidden md:flex flex-1 mx-4 lg:mx-8">
+                    <div class="relative w-full">
+                        <input type="text" placeholder="Cari apapun..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <button class="absolute right-2 top-2 text-gray-500">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-4 ml-auto">
+                    <div class="flex flex-col items-center">
+                        <i class="fas fa-phone text-blue-600"></i>
+                        <span class="text-xs mt-1 whitespace-nowrap">Hotline 24/7</span>
+                        <span class="text-sm font-semibold whitespace-nowrap">(025) 3686 25 16</span>
+                    </div>
+                    <div class="flex space-x-4 items-center">
+                        <a href="notifikasi.html" class="p-2 text-gray-700 hover:text-blue-600 relative">
+                            <i class="far fa-bell text-xl"></i>
+                        </a>
+                        <a href="masuk.html" class="p-2 text-gray-700 hover:text-blue-600 relative">
+                            <i class="far fa-user text-xl"></i>
+                        </a>
+                        <a href="keranjang.html" class="p-2 text-gray-700 hover:text-blue-600 relative">
+                            <i class="fas fa-shopping-cart text-xl"></i>
+                            <span class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">2</span>
+                        </a>
+                    </div>
+                    <div class="flex space-x-2">
+                        <a href="masuk.html" class="auth-button login-button">Masuk</a>
+                        <a href="iconjual.html" class="auth-button jual-button">+ Jual</a>
+                    </div>
+                </div>
+                
+                <button id="mobile-menu-button" class="md:hidden p-2 text-gray-700 ml-auto">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+
+            <nav class="hidden md:flex justify-center mt-4">
+                <ul class="flex space-x-8">
+                    <li><a href="index.html" class="text-gray-800 font-medium hover:text-blue-600 whitespace-nowrap">HOME</a></li>
+                    <li class="dropdown relative group">
+                        <a href="#" class="text-gray-800 font-medium hover:text-blue-600 flex items-center whitespace-nowrap">
+                            PAGE
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </a>
+                        <div class="dropdown-menu absolute hidden group-hover:block bg-white shadow-lg rounded-md py-2 mt-1 z-50 min-w-[200px]">
+                            <a href="#about-us-section" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">TENTANG KAMI</a>
+                            <a href="#blog-section" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">BLOG ARTIKEL</a>
+                        </div>
+                    </li>
+                    <li><a href="belanjasekarang.html" class="text-gray-800 font-medium hover:text-blue-600 whitespace-nowrap">PRODUCTS</a></li>
+                    <li><a href="#kontaksay-section" class="text-gray-800 font-medium hover:text-blue-600 whitespace-nowrap">CONTACT</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <div id="mobile-menu" class="mobile-menu md:hidden">
+            <div class="px-2 pt-2 pb-4 space-y-1">
+                <div class="relative mt-2 mb-4">
+                    <input type="text" placeholder="Cari apapun..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button class="absolute right-2 top-2 text-gray-500">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="flex flex-col space-y-2 mt-4">
+                    <a href="masuk.html" class="auth-button-mobile">Masuk</a>
+                    <a href="iconjual.html" class="auth-button-mobile">+ Jual</a>
+                </div>
+                <div class="flex items-center px-3 py-2">
+                    <i class="fas fa-phone text-blue-600 mr-2"></i>
+                    <div>
+                        <div class="text-xs">Hotline 24/7</div>
+                        <div class="text-sm font-semibold">(025) 3686 25 16</div>
+                    </div>
+                </div>
+                <div class="flex space-x-4 items-center px-3 py-2"> 
+                    <button class="p-2 text-gray-700 hover:text-blue-600 relative">
+                        <i class="fas fa-sync-alt text-xl"></i>
+                    </button>
+                    <button class="p-2 text-gray-700 hover:text-blue-600 relative">
+                        <i class="far fa-heart text-xl"></i>
+                    </button>
+                    <button class="p-2 text-gray-700 hover:text-blue-600 relative">
+                        <a href="masuk.html"><i class="far fa-user text-xl"></i></a>
+                    </button>
+                    <button class="p-2 text-gray-700 hover:text-blue-600 relative">
+                        <a href="keranjang.html"><i class="fas fa-shopping-bag text-xl"></i></a>
+                        <span class="absolute -top-1 -right-1 bg-blue-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">2</span>
+                    </button>
+                    <button class="p-2 text-gray-700 hover:text-blue-600 relative">
+                        <i class="fas fa-moon text-xl"></i>
+                    </button>
+                </div>
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">HOME</a>
+                <div>
+                    <button id="mobile-dropdown-member-button" class="w-full flex justify-between items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">
+                        PAGE
+                        <svg class="w-5 h-5 transition-transform duration-300" id="mobile-dropdown-member-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div id="mobile-dropdown-member-menu" class="mobile-menu pl-4">
+                        <a href="#about-us-section" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">TENTANG KAMI</a>
+                        <a href="#blog-section" class="block px-3 py-2 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-100">BLOG ARTIKEL</a>
+                    </div>
+                </div>
+                <a href="belanjasekarang.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">PRODUCTS</a>
+                <a href="#kontaksay-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">CONTACT</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="relative h-[500px] bg-gray-900 overflow-hidden">
+        <img src="images/udang.jpg" alt="Tambak udang Vaname modern dengan air biru jernih dan sistem budidaya canggih" class="w-full h-full object-cover">
+        <div class="hero-overlay absolute inset-0 flex items-center">
+            <div class="container mx-auto px-4 text-white">
+                <h1 id ="home" class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 font-montserrat leading-tight">
+                    Jual dan Beli Udang Segar Pesisir: <br> Semua di SHRIMPZONE.
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 max-w-2xl leading-relaxed">
+                    Temukan udang berkualitas langsung dari UMKM pesisir, atau kembangkan jangkauan bisnis Anda secara digital.
+                </p>
+                <a href="belanjasekarang.html" class="btn-primary px-8 py-3 rounded-lg font-semibold text-lg inline-block">
+                    Belanja Sekarang
+                </a>
+                <a href="iconjual.html" class="btn-secondary px-8 py-3 rounded-lg font-semibold text-lg inline-block text-center ml-4">
+                    Mulai Berjualan
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4 font-montserrat">Mengapa Memilih Kami</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Platform yang menghubungkan Anda dengan udang terbaik, dan mendukung pertumbuhan petani tambak.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="feature-card bg-white p-6 rounded-lg shadow-sm text-center transition duration-300">
+                    <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shrimp text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Lapak Digital Mudah</h3>
+                    <p class="text-gray-600">
+                        Petani tambak dapat membuat toko online mereka sendiri dengan cepat dan gratis.
+                    </p>
+                </div>
+
+                <div class="feature-card bg-white p-6 rounded-lg shadow-sm text-center transition duration-300">
+                    <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-water text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Harga Transparan</h3>
+                    <p class="text-gray-600">
+                        Nikmati harga kompetitif langsung dari produsen lokal tanpa perantara berlebih.
+                    </p>
+                </div>
+
+                <div class="feature-card bg-white p-6 rounded-lg shadow-sm text-center transition duration-300">
+                    <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-handshake text-blue-600 text-2xl"></i> </div>
+                    <h3 class="text-xl font-semibold mb-3">Jangkauan Pasar Luas</h3>
+                    <p class="text-gray-600">
+                        Petani tambak bisa menjangkau pelanggan di seluruh Indonesia, bukan hanya lokal.
+                    </p>
+                </div>
+
+                <div class="feature-card bg-white p-6 rounded-lg shadow-sm text-center transition duration-300">
+                    <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-fish text-blue-600 text-2xl"></i> </div>
+                    <h3 class="text-xl font-semibold mb-3">Pilihan Udang dari Petani Tambak</h3>
+                    <p class="text-gray-600">
+                        Berbagai jenis udang segar dan berkualitas dari mitra UMKM kami.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4 font-montserrat">Pilihan Udang Unggulan Kami</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Produk udang premium yang dipanen langsung dari tambak kami
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
+                    <div class="relative overflow-hidden">
+                        <img src="images/udangvename.png" alt="Udang Vaname Segar ukuran medium dengan warna pink keabuan dan tekstur mengkilap" class="w-full h-48 object-cover">
+                        <div class="absolute top-2 right-2 bg-yellow-500 text-white text-xs font-bold px-2 py-1 rounded">
+                            TERLARIS
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-1">Udang Vaname Segar Ukuran Medium</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-gray-500 text-sm ml-2">(127 reviews)</span>
+                        </div>
+                        <p class="text-blue-600 font-bold text-xl mb-4">Rp 95.000 / Kg</p>
+                        <a href="udangvaname.html" class="btn-primary w-full py-2 rounded-md text-center block">
+                            Lihat Detail
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
+                    <div class="relative overflow-hidden">
+                        <img src="images/udang windu.jpg" alt="Udang Windu besar dengan kulit yang keras dan gelap" class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-1">Udang Windu Ukuran Besar</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="text-gray-500 text-sm ml-2">(92 reviews)</span>
+                        </div>
+                        <p class="text-blue-600 font-bold text-xl mb-4">Rp 125.000 / Kg</p>
+                        <a href="udangwindu.html" class="btn-primary w-full py-2 rounded-md text-center block">
+                            Lihat Detail
+                        </a>
+                    </div>
+                </div>
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
+                    <div class="relative overflow-hidden">
+                        <img src="images/udang galah.jpg" alt="Udang Galah Jumbo dengan capit biru panjang yang khas" class="w-full h-48 object-cover">
+                    </div>
+                <div class="p-4">
+                <h3 class="font-semibold text-lg mb-1">Udang Galah Jumbo</h3>
+                <div class="flex items-center mb-2">
+                    <div class="flex text-yellow-400">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                    </div>
+                    <span class="text-gray-500 text-sm ml-2">(68 reviews)</span>
+                </div>
+                <p class="text-blue-600 font-bold text-xl mb-4">Rp 150.000 / Kg</p>
+                <a href="udanggalah.html" class="btn-primary w-full py-2 rounded-md text-center block">
+                    Lihat Detail
+                </a>
+            </div>
+</div>
+
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
+                    <div class="relative overflow-hidden">
+                        <img src="images/udangvename.png" alt="Udang Vaname dalam kemasan khusus untuk distribusi" class="w-full h-48 object-cover">
+                        <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                            TERBARU
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-1">Paket Udang Vaname 5 Kg</h3>
+                        <div class="flex items-center mb-2">
+                            <div class="flex text-yellow-400">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <span class="text-gray-500 text-sm ml-2">(34 reviews)</span>
+                        </div>
+                        <p class="text-blue-600 font-bold text-xl mb-4">Rp 425.000 <span class="text-gray-500 text-sm line-through">Rp 475.000</span></p>
+                        <a href="udangvaname.html" class="btn-primary w-full py-2 rounded-md text-center block">
+                            Lihat Detail
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center">
+                <a href="belanjasekarang.html" class="btn-secondary px-6 py-3 rounded-lg font-semibold text-lg inline-block">
+                    Lihat Semua Produk
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about-us-section" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4 font-montserrat">Tentang Kami: Berdayakan Petani Tambak Melalui Digitalisasi</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Mengenal lebih dekat visi SHRIMPZONE untuk memajukan ekonomi masyarakat pesisir.
+                </p>
+            </div>
+
+            <div class="bg-gray-100 p-8 rounded-lg shadow-sm mb-12">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 font-montserrat">Visi & Misi Kami</h3>
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    SHRIMPZONE hadir dengan tujuan mulia: **menjadi jembatan bagi para petani tambak, khususnya di daerah pesisir seperti Rembang, untuk mengoptimalkan potensi pendapatan mereka.** Kami melihat besarnya potensi produk laut segar dan olahan yang dihasilkan oleh masyarakat pesisir, namun seringkali terkendala oleh akses pasar dan pemanfaatan teknologi.
+                </p>
+                <p class="text-gray-700 mb-6 leading-relaxed">
+                    Melalui platform SHRIMPZONE, kami menyediakan **lapak digital modern** yang memungkinkan petani tambak untuk **memasarkan produk mereka secara lebih luas dan efisien menggunakan teknologi.** Kami berkomitmen untuk menyediakan infrastruktur digital yang mudah digunakan, serta dukungan untuk membantu petani tambak dalam proses pemasaran, manajemen pesanan, hingga distribusi.
+                </p>
+                <div class="flex justify-center items-center mb-6">
+                    <img src="images/tambak.webp" 
+                    alt="Layout Budidaya Udang Modern SHRIMPZONE" 
+                    class="rounded-lg shadow-md w-80 h-auto">
+                </div>
+                <p class="text-gray-700 leading-relaxed">
+                    Kami percaya bahwa dengan memberdayakan melalui digitalisasi, kami tidak hanya meningkatkan pendapatan individu, tetapi juga turut serta dalam **menggerakkan roda perekonomian lokal dan nasional.** SHRIMPZONE adalah wujud komitmen kami untuk inovasi yang berdampak sosial dan ekonomi nyata bagi masyarakat.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="blog-section" class="py-16 bg-gray-50"> 
+        <div class="container mx-auto px-4">
+            <div class="mb-12 text-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4 font-montserrat">Blog & Artikel Terbaru</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Temukan inspirasi dan wawasan seputar udang, budidaya, resep, dan banyak lagi.
+                </p>
+            </div>
+
+            <div class="blog-slider-container">
+                <div class="blog-slider-wrapper" id="blog-slider-wrapper">
+                    <div class="blog-slide-item w-full sm:w-1/2 lg:w-1/3 p-2">
+                        <a href="https://www.idntimes.com/food/recipe/5-tips-memilih-udang-segar-biar-rasanya-enak-saat-diolah-01-qw35q-bxfyv6?utm_source=chatgpt.com" target="_blank" class="blog-card block h-full">
+                            <img src="images/artikel1.png" alt="Thumbnail Artikel 1" class="w-full h-48 object-cover">
+                            <div class="p-4 flex flex-col justify-between h-auto">
+                                <h3 class="font-semibold text-lg mb-2 text-gray-900">5 Tips Memilih Udang Segar Biar Rasanya Enak Saat Diolah</h3>
+                                <p class="text-gray-700 text-sm mb-3 flex-grow">Pelajari cara mengenali udang segar berkualitas tinggi untuk hidangan terbaik.</p>
+                                <span class="text-blue-600 hover:underline text-sm font-medium">Baca Selengkapnya <i class="fas fa-external-link-alt ml-1 text-xs"></i></span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="blog-slide-item w-full sm:w-1/2 lg:w-1/3 p-2">
+                        <a href="https://delosaqua.com/id/characteristics-of-fresh-shrimp/?utm_source=chatgpt.com" target="_blank" class="blog-card block h-full">
+                            <img src="images/Artikel2.png" alt="Thumbnail Artikel 2" class="w-full h-48 object-cover">
+                            <div class="p-4 flex flex-col justify-between h-auto">
+                                <h3 class="font-semibold text-lg mb-2 text-gray-900">10 Ciri-Ciri Udang Segar dan Tips Memilihnya </h3>
+                                <p class="text-gray-700 text-sm mb-3 flex-grow">Kenali ciri ciri udang Anda.</p>
+                                <span class="text-blue-600 hover:underline text-sm font-medium">Baca Selengkapnya <i class="fas fa-external-link-alt ml-1 text-xs"></i></span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="blog-slide-item w-full sm:w-1/2 lg:w-1/3 p-2">
+                        <a href="https://eatgood.id/detail/artikel/783/9-tips-untuk-memilih-udang-segar?utm_source=chatgpt.com" target="_blank" class="blog-card block h-full">
+                            <img src="images/Artikel3.png" alt="Thumbnail Artikel 3" class="w-full h-48 object-cover">
+                            <div class="p-4 flex flex-col justify-between h-auto">
+                                <h3 class="font-semibold text-lg mb-2 text-gray-900">9 Tips Untuk Memilih Udang Segar</h3>
+                                <p class="text-gray-700 text-sm mb-3 flex-grow">Mengenal ciri cir udang segar untuk di masak</p>
+                                <span class="text-blue-600 hover:underline text-sm font-medium">Baca Selengkapnya <i class="fas fa-external-link-alt ml-1 text-xs"></i></span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="blog-slide-item w-full sm:w-1/2 lg:w-1/3 p-2">
+                        <a href="https://www.kompas.id/baca/ekonomi/2023/06/25/pemerintah-dorong-perluasan-tambak-udang-modern?utm_source=chatgpt.com" target="_blank" class="blog-card block h-full">
+                            <img src="images/Artikel4.png" alt="Thumbnail Artikel 4" class="w-full h-48 object-cover">
+                            <div class="p-4 flex flex-col justify-between h-auto">
+                                <h3 class="font-semibold text-lg mb-2 text-gray-900">Pemerintah Dorong Perluasan Tambak Udang Modern</h3>
+                                <p class="text-gray-700 text-sm mb-3 flex-grow">Yuk ketahui infonya kebih lanjut</p>
+                                <span class="text-blue-600 hover:underline text-sm font-medium">Baca Selengkapnya <i class="fas fa-external-link-alt ml-1 text-xs"></i></span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="blog-slide-item w-full sm:w-1/2 lg:w-1/3 p-2">
+                        <a href="https://jala.tech/id/blog/tips-budidaya/imta-sistem-budidaya-udang-ramah-lingkungan-dan-berkelanjutan?utm_source=chatgpt.com" target="_blank" class="blog-card block h-full">
+                            <img src="images/Artikel5.png" alt="Thumbnail Artikel 5" class="w-full h-48 object-cover">
+                            <div class="p-4 flex flex-col justify-between h-auto">
+                                <h3 class="font-semibold text-lg mb-2 text-gray-900">IMTA: Sistem Budidaya Udang Ramah Lingkungan dan Berkelanjutan</h3>
+                                <p class="text-gray-700 text-sm mb-3 flex-grow">Yuk ketahu lebih lanjut</p>
+                                <span class="text-blue-600 hover:underline text-sm font-medium">Baca Selengkapnya <i class="fas fa-external-link-alt ml-1 text-xs"></i></span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <button id="slider-prev" class="slider-nav-button left">
+                    <i class="fas fa-chevron-left text-2xl"></i>
+                </button>
+                <button id="slider-next" class="slider-nav-button right">
+                    <i class="fas fa-chevron-right text-2xl"></i>
+                </button>
+            </div>
+            <div id="slider-dots" class="slider-dots">
+            </div>
+
+            <div class="mt-12 text-center">
+                <a href="#" class="btn-secondary px-6 py-3 rounded-lg font-semibold text-lg inline-block">
+                    Lihat Lebih Banyak Artikel
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 bg-blue-900 text-white">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold mb-6 font-montserrat">Dapatkan 10% Diskon untuk Pembelian Pertama Anda!</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">
+                Daftarkan email Anda sekarang untuk mendapatkan kode promo khusus
+            </p>
+            <div class="max-w-md mx-auto flex">
+                <input type="email" placeholder="Masukkan alamat email Anda" class="flex-grow px-4 py-3 rounded-l-lg focus:outline-none text-gray-900">
+                <button class="btn-primary px-6 py-3 rounded-r-lg font-semibold">
+                    Daftar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-white pt-16 pb-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div>
+                    <img src="images/logo.png" alt="Logo SHRIMPZONE dengan maskot udang lucu" class="h-10 mb-4">
+                    <p class="mb-4">
+                        SHRIMPZONE: Kualitas Udang Pesisir, Daya Jangkau Global
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Produk Kami</h3>
+                    <ul class="space-y-2">
+                        <li><a href="udangvaname.html" class="text-gray-400 hover:text-white">Udang Vaname</a></li>
+                        <li><a href="udangwindu.html" class="text-gray-400 hover:text-white">Udang Windu</a></li>
+                        <li><a href="udangputih.html" class="text-gray-400 hover:text-white">Udang Putih</a></li>
+                        <li><a href="udanggalah.html" class="text-gray-400 hover:text-white">Udang Galah</a></li>
+                        <li><a href="kerupukudang.html" class="text-gray-400 hover:text-white">Produk Olahan Udang</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Perusahaan</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#about-us-section" class="text-gray-400 hover:text-white">Tentang Kami</a></li>
+                        <li><a href="#blog-section" class="text-gray-400 hover:text-white">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">
+                        <a href="#kontaksay-section" class="hover:text-white">Kontak</a>
+                    </h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-gray-400"></i>
+                            <span class="text-gray-400">Jl. VZone No. 1, Surakarta, Jawa Tengah, Indonesia</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt mr-3 text-gray-400"></i>
+                            <span class="text-gray-400">(025) 3686 25 16</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-3 text-gray-400"></i>
+                            <span class="text-gray-400">info@shrimpzone.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-500 text-sm mb-4 md:mb-0">
+                    &copy; 2023 SHRIMPZONE. All rights reserved.
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-500 hover:text-white text-sm">Terms of Service</a>
+                    <a href="#" class="text-gray-500 hover:text-white text-sm">Privacy Policy</a>
+                    <a href="#" class="text-gray-500 hover:text-white text-sm">Shipping Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // JavaScript for main mobile menu toggle
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('open');
+            // Set max-height for smooth transition
+            if (mobileMenu.classList.contains('open')) {
+                mobileMenu.style.maxHeight = mobileMenu.scrollHeight + "px";
+            } else {
+                mobileMenu.style.maxHeight = "0";
+            }
+        });
+
+        // JavaScript for mobile dropdown menu inside the main mobile menu
+        document.getElementById('mobile-dropdown-member-button').addEventListener('click', function() {
+            const dropdownMenu = document.getElementById('mobile-dropdown-member-menu');
+            const dropdownIcon = document.getElementById('mobile-dropdown-member-icon');
+            dropdownMenu.classList.toggle('open');
+            dropdownIcon.classList.toggle('rotate-180'); // Rotate icon for visual feedback
+
+            if (dropdownMenu.classList.contains('open')) {
+                dropdownMenu.style.maxHeight = dropdownMenu.scrollHeight + "px";
+            } else {
+                dropdownMenu.style.maxHeight = "0";
+            }
+        });
+
+        // --- Blog Slider JavaScript ---
+        const blogSliderWrapper = document.getElementById('blog-slider-wrapper');
+        const sliderPrevBtn = document.getElementById('slider-prev');
+        const sliderNextBtn = document.getElementById('slider-next');
+        const sliderDotsContainer = document.getElementById('slider-dots');
+        const blogSlides = document.querySelectorAll('.blog-slide-item');
+
+        let currentSlideIndex = 0;
+        let slidesPerView = 3; // Default for desktop
+        let slideMargin = 32; // Gap in px (from Tailwind's gap-8)
+
+        function getSlidesPerView() {
+            if (window.innerWidth >= 1024) { // lg breakpoint
+                return 3;
+            } else if (window.innerWidth >= 640) { // sm breakpoint
+                return 2;
+            } else { // default for mobile
+                return 1;
+            }
+        }
+
+        function updateSliderDimensions() {
+            slidesPerView = getSlidesPerView();
+            
+            blogSlides.forEach(slide => {
+                // Calculate width to fit slidesPerView with gap. 
+                // Adjusted calculation to account for the padding within the item and the overall gap.
+                slide.style.width = `calc(${100 / slidesPerView}% - ${(slideMargin * (slidesPerView - 1)) / slidesPerView}px)`;
+            });
+
+            // Ensure slider is positioned correctly after resize
+            showBlogSlide(currentSlideIndex);
+        }
+
+        function showBlogSlide(index) {
+            // Prevent going out of bounds
+            const maxIndex = blogSlides.length - slidesPerView;
+            if (index < 0) {
+                currentSlideIndex = 0;
+            } else if (index > maxIndex) {
+                currentSlideIndex = maxIndex;
+            } else {
+                currentSlideIndex = index;
+            }
+
+            // Get the *actual* computed width of a single slide item, including its own padding.
+            // Using clientWidth directly is more robust than trying to calculate from parent.
+            if (blogSlides.length > 0) {
+                const firstSlideWidth = blogSlides[0].offsetWidth; 
+                // The total shift needed is (width of one slide + gap between slides) * current index
+                const translateValue = -currentSlideIndex * (firstSlideWidth + (window.innerWidth >= 640 ? 16 : 0)); // Assuming 16px for `p-2` which is 0.5rem * 2, plus the gap. This needs careful tuning or a more direct gap measurement.
+                // A simpler, more robust way: Measure the actual distance from the left edge of the first element to the left edge of the next visible element.
+                // However, with `flex-shrink-0` and `width: calc(...)`, the above calculation with `firstSlideWidth + slideMargin` should work if `slideMargin` accurately reflects the space *between* visible slides.
+
+                // Let's refine slideMargin usage if it's the actual space between elements due to `p-2` or `gap-8` on the parent.
+                // `gap-8` in Tailwind means 32px gap. If each `blog-slide-item` has `p-2`, that's 8px padding on each side (total 16px horizontal).
+                // The `slideMargin` should represent the actual space *between* the elements after `p-2` has been applied and `gap-8` is the parent's gap.
+                // Given `p-2` on `blog-slide-item`, each item contributes 8px from its right padding and the next item contributes 8px from its left padding. 
+                // The `gap-8` (32px) on the grid/flex parent then adds to this.
+                // For a simpler and more reliable slide calculation when using `gap` on the parent and padding on items:
+                // Calculate the true step: width of one slide (including its own padding) + the effective gap.
+                // A better approach for `slideMargin` in `showBlogSlide`:
+                const effectiveGap = parseFloat(getComputedStyle(blogSliderWrapper).gap || '0px'); // If gap is applied to wrapper
+                const itemMargin = parseFloat(getComputedStyle(blogSlides[0]).paddingLeft) * 2; // Total horizontal padding for p-2 (0.5rem = 8px)
+                const totalMove = blogSlides[0].offsetWidth; // This accounts for padding directly from the element's rendered width.
+                const translateXValue = -currentSlideIndex * (totalMove + effectiveGap); // Adjust for the actual gap between elements
+                
+                // Re-calculating `firstSlideWidth + slideMargin` based on actual layout:
+                // `p-2` means 0.5rem padding, so 8px on left and 8px on right.
+                // `gap-8` on the grid/flex parent (not directly on .blog-slider-wrapper) means 32px between items.
+                // Let's assume the `gap-8` is the primary spacing.
+                const singleItemWidth = blogSlides[0].offsetWidth; // Includes its own p-2
+                // The distance to move for one slide is one card's full width + the defined gap between cards (if grid/flex gap is used).
+                // Your current CSS implies `.blog-slider-wrapper` is `display:flex` and `blog-slide-item` has `p-2`.
+                // The `gap-8` is not explicitly on `blog-slider-wrapper`. If it was, the calculation would be simpler.
+                // With `padding: 0.5rem;` on `blog-slide-item`, each item "consumes" 1rem (16px) of space from its width for padding.
+                // The `width: calc(${100 / slidesPerView}% - ${slideMargin * (slidesPerView - 1) / slidesPerView}px);`
+                // is trying to bake in the spacing.
+                // A simpler, more reliable way to move: just get the `scrollWidth` of a single item and add the margin you want *between* the items for the calculation.
+                
+                // Let's simplify the translation to use `blogSlides[0].clientWidth` + an assumed consistent gap.
+                // Since `p-2` is on each `blog-slide-item`, and Tailwind's `gap-8` would be applied to a parent (which your `blog-slider-wrapper` isn't directly showing as having a `gap-8` class),
+                // we should consider that `p-2` adds space.
+                // The `slideMargin` you defined is 32px. This seems to be the intended gap between items.
+                // The `offsetWidth` of a `blog-slide-item` *includes* its own padding.
+                const totalItemWidth = blogSlides[0].offsetWidth; // This is the width including p-2
+                const actualSpacingBetweenItems = slideMargin; // This variable should truly represent the *gap* between items
+                const moveDistance = (totalItemWidth + actualSpacingBetweenItems);
+                
+                // For the last slide, if slidesPerView is 3, and you have 5 slides, maxIndex is 2.
+                // currentSlideIndex 2 -> -2 * (totalItemWidth + actualSpacingBetweenItems)
+                // This seems correct.
+
+                blogSliderWrapper.style.transform = `translateX(${-currentSlideIndex * (totalItemWidth)}px)`;
+                // The issue with the slide calculation might be due to `slide.style.width` calculation.
+                // Let's re-think `slide.style.width` and `translateX`.
+                // The `slide.style.width` line is tricky with `calc`. It should be `calc(100% / slidesPerView - effective_gap_per_item)`.
+                // Let's make the `slide-item` responsible for its own margin-right, and remove `padding: 0.5rem` from the style here, 
+                // applying it with Tailwind classes directly in the HTML if needed.
+
+                // For current setup, `offsetWidth` already includes padding.
+                // Let's assume `slideMargin` is indeed the *additional* gap between elements.
+                const translateXDistance = currentSlideIndex * (blogSlides[0].offsetWidth + (slidesPerView > 1 ? 32 : 0)); // Assume 32px (gap-8) if more than 1 slide visible
+                blogSliderWrapper.style.transform = `translateX(${-translateXDistance}px)`;
+            }
+
+            updateDots();
+            updateNavigationButtons();
+        }
+
+        function updateDots() {
+            sliderDotsContainer.innerHTML = ''; // Clear existing dots
+            const totalDots = Math.ceil(blogSlides.length / slidesPerView);
+            for (let i = 0; i < totalDots; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('slider-dot');
+                if (i === Math.floor(currentSlideIndex / slidesPerView)) {
+                    dot.classList.add('active');
+                }
+                dot.dataset.slideIndex = i * slidesPerView; // Link dot to first slide of its "page"
+                dot.addEventListener('click', () => showBlogSlide(parseInt(dot.dataset.slideIndex)));
+                sliderDotsContainer.appendChild(dot);
+            }
+        }
+
+        function updateNavigationButtons() {
+            sliderPrevBtn.disabled = currentSlideIndex === 0;
+            sliderNextBtn.disabled = currentSlideIndex >= blogSlides.length - slidesPerView;
+
+            // Optional: hide buttons if there are no more slides to show
+            if (blogSlides.length <= slidesPerView) {
+                sliderPrevBtn.style.display = 'none';
+                sliderNextBtn.style.display = 'none';
+                sliderDotsContainer.style.display = 'none'; // Hide dots too if no sliding needed
+            } else {
+                sliderPrevBtn.style.display = 'block';
+                sliderNextBtn.style.display = 'block';
+                sliderDotsContainer.style.display = 'flex';
+            }
+        }
+
+        // Event Listeners for Slider Navigation
+        sliderPrevBtn.addEventListener('click', () => {
+            showBlogSlide(currentSlideIndex - 1);
+        });
+
+        sliderNextBtn.addEventListener('click', () => {
+            showBlogSlide(currentSlideIndex + 1);
+        });
+
+        // Initial setup and resize handling for the blog slider
+        window.addEventListener('resize', () => {
+            updateSliderDimensions();
+        });
+
+        // Testimonial Slider (your original code, kept for completeness)
+        // Make sure these elements exist in your HTML if you want this to work.
+        const testimonialSlider = document.getElementById('testimonial-slider'); 
+        const testimonialDots = document.querySelectorAll('.testimonial-dot');
+        let currentTestimonialSlide = 0;
+
+        function showTestimonialSlide(index) {
+            if (!testimonialSlider || !testimonialSlider.firstElementChild) return; 
+
+            const slideWidth = testimonialSlider.querySelector('.testimonial-slide').offsetWidth;
+            testimonialSlider.style.transform = `translateX(-${index * slideWidth}px)`;
+            testimonialDots.forEach((dot, i) => {
+                if (i === index) {
+                    dot.classList.add('active-dot');
+                } else {
+                    dot.classList.remove('active-dot');
+                }
+            });
+            currentTestimonialSlide = index;
+        }
+
+        if (testimonialDots.length > 0) { // Only add listeners if dots exist
+            testimonialDots.forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    const slideIndex = parseInt(e.target.dataset.slide);
+                    showTestimonialSlide(slideIndex);
+                });
+            });
+        }
+
+        window.addEventListener('resize', () => {
+            // Only call if slider elements exist
+            if (testimonialSlider && testimonialDots.length > 0) {
+                showTestimonialSlide(currentTestimonialSlide); // Recalculate transform on resize
+            }
+        });
+
+        // Ensure all sliders initialize on DOM load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize Blog Slider
+            updateSliderDimensions(); // Calculate initial sizes and positions
+            showBlogSlide(0); // Show the first slide
+
+            // Initialize Testimonial Slider (if exists)
+            if (testimonialSlider && testimonialDots.length > 0) {
+                showTestimonialSlide(0);
+            }
+        });
+    </script>
+</body>
+</html>

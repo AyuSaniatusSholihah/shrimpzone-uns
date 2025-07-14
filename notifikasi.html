@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifikasi Saya - SHRIMPZONE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+        }
+        .notification-card {
+            @apply bg-white p-4 rounded-lg shadow-sm flex items-start space-x-4;
+        }
+        .notification-icon {
+            @apply text-2xl;
+        }
+        .notification-unread {
+            @apply border-l-4 border-blue-500;
+        }
+        .notification-read {
+            @apply opacity-70;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-white shadow-md py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="#" onclick="history.back()" class="text-gray-600 hover:text-blue-600">
+                <i class="fas fa-arrow-left text-xl"></i>
+            </a>
+            <h1 class="text-2xl font-bold text-gray-800">Notifikasi</h1>
+            <button id="mark-all-read-btn" class="text-blue-600 hover:underline text-sm">
+                Tandai Semua Sudah Dibaca
+            </button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 max-w-2xl">
+        <div id="notification-list" class="space-y-4">
+            </div>
+
+        <div id="no-notifications-message" class="hidden text-center text-gray-600 mt-12">
+            <p class="text-xl font-semibold mb-4">Tidak ada notifikasi baru.</p>
+            <p>Semua beres!</p>
+        </div>
+    </main>
+
+    <script>
+        const notificationList = document.getElementById('notification-list');
+        const noNotificationsMessage = document.getElementById('no-notifications-message');
+        const markAllReadBtn = document.getElementById('mark-all-read-btn');
+
+        // Fungsi untuk menambahkan notifikasi baru (SEKARANG GLOBAL)
+        window.addNotification = function(type, title, message) { // <<< Perubahan di sini: window.addNotification
+            let notifications = JSON.parse(localStorage.getItem('userNotifications')) || [];
+            const newNotification = {
+                id: Date.now(), // ID unik
+                type: type,    // Contoh: 'purchase', 'promo', 'shipping', 'chat'
+                title: title,
+                message: message,
+                timestamp: new Date().toISOString(),
+                read: false    // Status notifikasi
+            };
+            notifications.unshift(newNotification); // Tambahkan ke awal array (notifikasi terbaru di atas)
+            localStorage.setItem('userNotifications', JSON.stringify(notifications));
+            
+            // Opsional: Jika Anda berada di halaman notifikasi, langsung perbarui tampilan
+            if (window.location.pathname.includes('notifikasi.html')) {
+                displayNotifications();
+            }
+        };
+
+        // Fungsi untuk mengambil dan menampilkan notifikasi
+        function displayNotifications() {
+            let notifications = JSON.parse(localStorage.getItem('userNotifications')) || [];
+            notificationList.innerHTML = ''; // Bersihkan daftar yang ada
+
+            if (notifications.length === 0) {
+                noNotificationsMessage.classList.remove('hidden');
+                markAllReadBtn.classList.add('hidden');
+            } else {
+                noNotificationsMessage.classList.add('hidden');
+                markAllReadBtn.classList.remove('hidden');
+
+                notifications.forEach(notif => {
+                    const notificationCard = document.createElement('div');
+                    notificationCard.className = `notification-card ${notif.read ? 'notification-read' : 'notification-unread'}`;
+                    notificationCard.dataset.id = notif.id;
+
+                    let iconClass = '';
+                    let iconColor = 'text-gray-500'; // Default color
+
+                    switch (notif.type) {
+                        case 'purchase':
+                            iconClass = 'fas fa-check-circle';
+                            iconColor = 'text-green-500';
+                            break;
+                        case 'promo':
+                            iconClass = 'fas fa-tags';
+                            iconColor = 'text-purple-500';
+                            break;
+                        case 'shipping':
+                            iconClass = 'fas fa-truck';
+                            iconColor = 'text-blue-500';
+                            break;
+                        case 'chat':
+                            iconClass = 'fas fa-comments';
+                            iconColor = 'text-yellow-500';
+                            break;
+                        default:
+                            iconClass = 'fas fa-info-circle';
+                            iconColor = 'text-gray-500';
+                    }
+
+                    const timeAgo = formatTimeAgo(notif.timestamp);
+
+                    notificationCard.innerHTML = `
+                        <div class="notification-icon ${iconClass} ${iconColor}"></div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-gray-800">${notif.title}</h3>
+                            <p class="text-gray-600 text-sm">${notif.message}</p>
+                            <p class="text-gray-500 text-xs mt-1">${timeAgo}</p>
+                        </div>
+                        <button class="text-gray-400 hover:text-gray-600 delete-notification-btn" data-id="${notif.id}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    notificationList.appendChild(notificationCard);
+
+                    // Tandai sudah dibaca saat diklik (jika belum)
+                    if (!notif.read) {
+                        notificationCard.addEventListener('click', () => {
+                            markNotificationAsRead(notif.id);
+                        }, { once: true }); // Hanya jalankan sekali
+                    }
+                });
+
+                // Tambahkan event listener untuk tombol hapus
+                document.querySelectorAll('.delete-notification-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Mencegah event click card
+                        const notifId = parseInt(button.dataset.id);
+                        deleteNotification(notifId);
+                    });
+                });
+            }
+        }
+
+        // Fungsi untuk menandai notifikasi sebagai sudah dibaca
+        function markNotificationAsRead(id) {
+            let notifications = JSON.parse(localStorage.getItem('userNotifications')) || [];
+            const index = notifications.findIndex(notif => notif.id === id);
+            if (index !== -1) {
+                notifications[index].read = true;
+                localStorage.setItem('userNotifications', JSON.stringify(notifications));
+                displayNotifications(); // Perbarui tampilan
+            }
+        }
+
+        // Fungsi untuk menandai semua notifikasi sebagai sudah dibaca
+        markAllReadBtn.addEventListener('click', () => {
+            let notifications = JSON.parse(localStorage.getItem('userNotifications')) || [];
+            notifications.forEach(notif => {
+                notif.read = true;
+            });
+            localStorage.setItem('userNotifications', JSON.stringify(notifications));
+            displayNotifications(); // Perbarui tampilan
+        });
+
+        // Fungsi untuk menghapus notifikasi
+        function deleteNotification(id) {
+            let notifications = JSON.parse(localStorage.getItem('userNotifications')) || [];
+            notifications = notifications.filter(notif => notif.id !== id);
+            localStorage.setItem('userNotifications', JSON.stringify(notifications));
+            displayNotifications(); // Perbarui tampilan
+        }
+
+        // Fungsi pembantu untuk format waktu (misal: "5 menit yang lalu")
+        function formatTimeAgo(timestamp) {
+            const now = new Date();
+            const past = new Date(timestamp);
+            const seconds = Math.floor((now - past) / 1000);
+
+            if (seconds < 60) {
+                return `${seconds} detik yang lalu`;
+            }
+            const minutes = Math.floor(seconds / 60);
+            if (minutes < 60) {
+                return `${minutes} menit yang lalu`;
+            }
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) {
+                return `${hours} jam yang lalu`;
+            }
+            const days = Math.floor(hours / 24);
+            if (days < 30) {
+                return `${days} hari yang lalu`;
+            }
+            const months = Math.floor(days / 30);
+            if (months < 12) {
+                return `${months} bulan yang lalu`;
+            }
+            const years = Math.floor(months / 12);
+            return `${years} tahun yang lalu`;
+        }
+
+        // Tampilkan notifikasi saat halaman dimuat
+        document.addEventListener('DOMContentLoaded', displayNotifications);
+
+        // --- Contoh cara menambahkan notifikasi (untuk tujuan demo) ---
+        // Jika Anda ingin menguji notifikasi tanpa harus melakukan pembayaran setiap saat,
+        // uncomment baris di bawah ini dan refresh halaman.
+        // if ((JSON.parse(localStorage.getItem('userNotifications') || '[]')).length < 3) { // Hanya tambahkan jika kurang dari 3 notif
+        //     window.addNotification('purchase', 'Pembelian Berhasil!', 'Pesanan Anda #SHRIMP1234 telah berhasil diproses.');
+        //     window.addNotification('promo', 'Diskon Spesial!', 'Dapatkan diskon 20% untuk Udang Vaname Premium hari ini!');
+        //     window.addNotification('shipping', 'Pesanan Dikirim', 'Pesanan #SHRIMP5678 Anda sedang dalam perjalanan.');
+        //     window.addNotification('chat', 'Pesan Baru', 'Anda memiliki pesan baru dari penjual.');
+        //     displayNotifications(); // Panggil lagi untuk langsung menampilkan yang baru ditambahkan
+        // }
+    </script>
+</body>
+</html>

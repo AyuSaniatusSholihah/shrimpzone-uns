@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Udang Windu - SHRIMPZONE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        /* Top Bar styles */
+        .top-bar {
+            background-color: #f59e0b; /* bg-orange-500, changed from red */
+            color: white;
+            padding: 8px 0;
+            text-align: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        /* Main Navigation styles */
+        .main-nav {
+            background-color: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .nav-left, .nav-right, .nav-center {
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-left {
+            flex-shrink: 0;
+            gap: 0.5rem;
+        }
+
+        .nav-center {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            max-width: 600px;
+            position: relative;
+            margin: 0 1rem;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            padding-right: 40px;
+        }
+
+        .search-button {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6b7280;
+            padding: 4px;
+        }
+
+        .nav-right {
+            flex-shrink: 0;
+            gap: 1rem;
+        }
+
+        .hotline {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1f2937;
+            white-space: nowrap;
+        }
+
+        .icon-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-group a, .icon-group i {
+            font-size: 1.25rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.2s;
+            text-decoration: none;
+        }
+
+        .icon-group a:hover, .icon-group i:hover {
+            color: #2563eb;
+        }
+        
+        /* Specific element styles */
+        .logo {
+            height: 40px;
+            width: auto;
+        }
+
+        .back-button {
+            color: #4b5563;
+            font-size: 1.25rem;
+            transition: color 0.2s;
+            margin-right: 0.5rem;
+        }
+        .back-button:hover {
+            color: #2563eb;
+        }
+
+        /* Product Detail & Checkout Layout */
+        .content-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .page-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-detail-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .product-main-info {
+            flex: 2;
+            min-width: 300px;
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .product-image-container {
+            width: 100%;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 0.5rem;
+        }
+
+        .product-name {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .product-rating .fas.fa-star.gold {
+            color: #f59e0b;
+        }
+
+        .product-rating .fas.fa-star.grey {
+            color: #d1d5db;
+        }
+
+        .product-rating .reviews {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-left: 0.5rem;
+        }
+
+        /* Styles for Seller Info */
+        .seller-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            background-color: #f9fafb; /* bg-gray-50 */
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+        .seller-info i {
+            color: #4b5563; /* gray-700 */
+            font-size: 1.125rem;
+        }
+        .seller-info .seller-name {
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .contact-seller-button {
+            background-color: #10b981; /* bg-emerald-500 */
+            color: white;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .contact-seller-button:hover {
+            background-color: #059669; /* emerald-600 */
+        }
+
+
+        .product-size-label {
+            font-weight: 500;
+            color: #4b5563;
+            margin-bottom: 0.5rem;
+        }
+
+        .variant-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .variant-btn {
+            background-color: #e5e7eb;
+            color: #4b5563;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .variant-btn.active {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .variant-btn:hover:not(.active) {
+            background-color: #d1d5db;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            color: #4b5563;
+        }
+
+        .quantity-control span {
+            margin-right: 0.5rem;
+        }
+
+        .quantity-btn {
+            background-color: #e5e7eb;
+            color: #1f2937;
+            border: 1px solid #d1d5db;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.25rem;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .quantity-btn:hover {
+            background-color: #d1d5db;
+        }
+
+        .quantity-display {
+            font-weight: 600;
+            margin: 0 1rem;
+            min-width: 2rem;
+            text-align: center;
+        }
+
+        .product-price {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 1.5rem;
+        }
+
+        .checkout-sidebar {
+            flex: 1;
+            min-width: 280px;
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        /* Checkout Sidebar specific styles */
+        .checkout-sidebar label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #4b5563;
+        }
+        .checkout-sidebar input[type="text"] {
+            border: 1px solid #d1d5db;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            color: #1f2937;
+        }
+        .checkout-sidebar h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+        .checkout-sidebar .space-y-2 > div {
+            display: flex;
+            align-items: center;
+        }
+        .checkout-sidebar input[type="radio"] {
+            margin-right: 0.5rem;
+        }
+        .checkout-sidebar label {
+            font-size: 0.9375rem;
+            color: #374151;
+        }
+
+        .payment-option-button {
+            background-color: #e5e7eb;
+            color: #4b5563;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: 1px solid #d1d5db;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .payment-option-button.selected {
+            background-color: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .payment-option-button:hover:not(.selected) {
+            background-color: #d1d5db;
+        }
+
+        .checkout-btn {
+            background-color: #2563eb;
+            color: white;
+            font-weight: 700;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        .checkout-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        /* Product Description & Comments Sections */
+        .description-section, .comments-section {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            margin-top: 2rem;
+        }
+
+        .comment-card {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background-color: #f9fafb;
+        }
+
+        .comment-avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+        /* Add to Cart button style */
+        .add-to-cart-button {
+            @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-200 w-full mt-4;
+            display: flex; /* Make it a flex container */
+            align-items: center; /* Center items vertically */
+            justify-content: center; /* Center items horizontally */
+            gap: 0.5rem; /* Space between icon and text */
+        }
+        
+    </style>
+</head>
+
+<body>
+    <header class="top-bar">
+        <div class="top-bar-content">
+            <span class="discount-banner">Diskon Spesial Hari Ini!</span>
+        </div>
+    </header>
+
+    <nav class="main-nav">
+        <div class="nav-left">
+            <a href="javascript:history.back()" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <img src="images/logo.png" alt="Logo SHRIMPZONE" class="logo">
+        </div>
+        
+        <div class="nav-center">
+            <input type="text" placeholder="Search anything..." class="search-input">
+            <button class="search-button"><i class="fas fa-search"></i></button>
+        </div>
+        
+        <div class="nav-right">
+            <span class="hotline">Hotline 24/7 (025) 3688 25 16</span>
+            <div class="icon-group">
+                <a href="profile.html"><i class="fas fa-user"></i></a>
+                <a href="notifikasi.html"><i class="fas fa-bell"></i></a>
+                <a href="#"><i class="fas fa-moon"></i></a>
+                <a href="keranjang.html"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content-wrapper">
+        <h1 class="page-title">Detail Produk</h1>
+
+        <div class="product-detail-layout">
+            <div class="product-main-info">
+                <div class="product-image-container">
+                    <img src="images/udang windu.jpg" alt="Udang Windu" class="product-image">
+                </div>
+                <div class="product-description">
+                    <h2 class="product-name" id="product-name">Udang Windu</h2>
+                    <div class="product-rating">
+                        <i class="fas fa-star gold"></i>
+                        <i class="fas fa-star gold"></i>
+                        <i class="fas fa-star gold"></i>
+                        <i class="fas fa-star gold"></i>
+                        <i class="fas fa-star grey"></i>
+                        <span class="reviews">(68 reviews)</span>
+                    </div>
+
+                    <div class="seller-info">
+                        <i class="fas fa-store"></i>
+                        <span class="seller-name" id="seller-name">Toko Pak Parman</span>
+                        <a href="javascript:void(0);" id="contact-seller-button" class="contact-seller-button ml-auto">
+                            <i class="fab fa-whatsapp"></i> Hubungi Penjual
+                        </a>
+                    </div>
+                    <p class="product-size-label">Ukuran</p>
+                    <div class="variant-options" id="variant-options">
+                        <button class="variant-btn active" data-weight="200g" data-price="50000">200 gram</button>
+                        <button class="variant-btn" data-weight="500g" data-price="95000">500 gram</button>
+                        <button class="variant-btn" data-weight="1000g" data-price="150000">1000 gram</button>
+                    </div>
+                    <div class="quantity-control">
+                        <span>Jumlah : </span>
+                        <button class="quantity-btn" id="decrease-qty">-</button>
+                        <span class="quantity-display" id="quantity-display">1</span>
+                        <button class="quantity-btn" id="increase-qty">+</button>
+                    </div>
+                    <p class="product-price" id="display-price">Rp 50.000 / 200 gram</p>
+
+                    <button id="add-to-cart-button" class="add-to-cart-button">
+                        <i class="fas fa-cart-plus"></i> Tambah ke Keranjang
+                    </button>
+                    </div>
+            </div>
+
+            <div class="checkout-sidebar">
+                <h2 class="text-lg font-semibold text-gray-800 mb-2">Checkout</h2>
+                
+                <div class="flex flex-col mb-4">
+                    <label for="alamat" class="block font-medium text-gray-700 mb-2">Pilih Alamat</label>
+                    <input type="text" id="alamat" class="w-full border border-gray-300 px-4 py-2 rounded-md" placeholder="Masukkan alamat Anda">
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">Pilih Metode Pembayaran</h3>
+                    <div class="space-y-2 mb-4">
+                        <div>
+                            <input type="radio" id="bank" name="payment-method-group" value="bank" class="mr-2">
+                            <label for="bank"><i class="fas fa-university text-blue-600 mr-1"></i>Transfer Bank</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="ewallet" name="payment-method-group" value="ewallet" class="mr-2">
+                            <label for="ewallet"><i class="fas fa-wallet text-green-600 mr-1"></i>E-Wallet</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="credit" name="payment-method-group" value="credit" class="mr-2">
+                            <label for="credit"><i class="fas fa-credit-card text-purple-600 mr-1"></i>Kartu Kredit/Debit</label>
+                        </div>
+                        <div>
+                            <input type="radio" id="cod" name="payment-method-group" value="cod" class="mr-2">
+                            <label for="cod"><i class="fas fa-handshake text-yellow-600 mr-1"></i>COD</label>
+                        </div>
+                    </div>
+
+                    <div id="bank-transfer-options" class="hidden mb-4">
+                        <p class="font-medium mb-1 text-gray-700">Pilih Bank Transfer:</p>
+                        <div class="flex gap-2 flex-wrap">
+                            <button class="payment-option-button" data-bank="bri">BRI</button>
+                            <button class="payment-option-button" data-bank="bca">BCA</button>
+                            <button class="payment-option-button" data-bank="bni">BNI</button>
+                            <button class="payment-option-button" data-bank="mandiri">Mandiri</button>
+                        </div>
+                    </div>
+
+                    <div id="ewallet-options" class="hidden mb-4">
+                        <p class="font-medium mb-1 text-gray-700">Pilih E-Wallet:</p>
+                        <div class="flex gap-2 flex-wrap">
+                            <button class="payment-option-button" data-ewallet="shopeepay">ShopeePay</button>
+                            <button class="payment-option-button" data-ewallet="ovo">OVO</button>
+                            <button class="payment-option-button" data-ewallet="gopay">GoPay</button>
+                            <button class="payment-option-button" data-ewallet="dana">Dana</button>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="pembayaranlangsung.html" class="block mt-4 text-center bg-blue-600 text-white font-bold py-2 rounded hover:bg-blue-700">
+                    <button class="checkout-btn w-full">Lakukan Pembayaran</button>
+                </a>
+            </div>
+        </div>
+
+        <div class="description-section">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Deskripsi :</h2>
+            <p class="text-gray-700 leading-relaxed">
+                Udang Windu segar berkualitas premium, langsung dari tambak budidaya modern SHRIMPZONE. Dibudidayakan dengan sistem air murni dan pakan alami, menghasilkan udang dengan tekstur padat, rasa manis alami, dan kaya akan protein. Cocok untuk berbagai olahan masakan seafood favorit Anda. Tersedia dalam berbagai ukuran untuk memenuhi kebutuhan dapur Anda.
+            </p>
+            <ul class="list-disc list-inside text-gray-700 mt-4">
+                <li>Kualitas Segar Optimal</li>
+                <li>Bebas Pengawet dan Bahan Kimia Berbahaya</li>
+                <li>Tinggi Protein dan Nutrisi</li>
+                <li>Ramah Lingkungan</li>
+            </ul>
+        </div>
+
+        <div class="comments-section">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">Komentar</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="comment-card">
+                    <img src="https://placehold.co/48x48/aabbcc/ffffff?text=A" alt="Avatar Ayu Saniatus" class="comment-avatar">
+                    <div>
+                        <p class="font-semibold text-gray-800">Ayu Saniatus</p>
+                        <div class="comment-rating mb-1">
+                            <i class="fas fa-star gold"></i>
+                            <i class="fas fa-star gold"></i>
+                            <i class="fas fa-star gold"></i>
+                            <i class="fas fa-star gold"></i>
+                            <i class="fas fa-star gold"></i>
+                            <span class="text-gray-500 text-xs ml-1">10/07/2025</span>
+                        </div>
+                        <p class="text-gray-700 text-sm">"Udangnya segar sekali! Kualitasnya bagus dan pengirimannya cepat. Pasti akan beli lagi!"</p>
+                    </div>
+                </div>
+
+                <div class="comment-card">
+                    <img src="https://placehold.co/48x48/ccbbaa/ffffff?text=B" alt="Avatar Budi" class="comment-avatar">
+                    <div>
+                        <p class="font-semibold text-gray-800">Budi</p>
+                        <div class="comment-rating mb-1">
+                            <i class="fas fa-star gold"></i>
+                            <i class="fas fa-star gold"></i>
+                            <i class="fas fa-star gold"></i>
+                            <i class="fas fa-star gold"></i>
+                            <i class="fas fa-star grey"></i>
+                            <span class="text-gray-500 text-xs ml-1">11/07/2025</span>
+                        </div>
+                        <p class="text-gray-700 text-sm">"Ini pembelian kedua saya dan tidak pernah mengecewakan. Rasa udangnya enak dan segar."</p>
+                    </div>
+                </div>
+
+                <div class="comment-card">
+                    <img src="https://placehold.co/48x48/aaccbb/ffffff?text=C" alt="Avatar Caca" class="comment-avatar">
+                    <div>
+                        <p class="font-semibold text-gray-800">Caca</p>
+                        <div class="comment-rating mb-1">
+                            <i class="fas fa-star gold"></i>
+                            <i class="fas fa-star gold"></i>
+                            <i class="fas fa-star gold"></i>
+                            <i class="fas fa-star gold"></i>
+                            <i class="fas fa-star gold"></i>
+                            <span class="text-gray-500 text-xs ml-1">12/07/2025</span>
+                        </div>
+                        <p class="text-gray-700 text-sm">"Udangnya segar sekali! Kualitasnya bagus dan pengirimannya cepat. Pasti akan beli lagi!"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const variantButtons = document.querySelectorAll('.variant-btn');
+        const quantityDisplay = document.getElementById('quantity-display');
+        const decreaseQtyBtn = document.getElementById('decrease-qty');
+        const increaseQtyBtn = document.getElementById('increase-qty');
+        const displayPrice = document.getElementById('display-price');
+        const paymentMethodRadios = document.querySelectorAll('input[name="payment-method-group"]');
+        const bankTransferOptions = document.getElementById('bank-transfer-options');
+        const ewalletOptions = document.getElementById('ewallet-options');
+        const paymentOptionButtons = document.querySelectorAll('.payment-option-button');
+
+        const sellerNameDisplay = document.getElementById('seller-name');
+        const contactSellerButton = document.getElementById('contact-seller-button');
+        const addToCartButton = document.getElementById('add-to-cart-button'); // New: Get Add to Cart button
+
+        let currentPrice = 0;
+        let currentWeight = '';
+        let quantity = 1;
+
+        // Dummy data for the current product being viewed
+        // In a real application, this data would come from a database or query parameters
+        const currentProductDetail = {
+            id: 1, // Unique ID for Udang Vaname
+            name: "Udang Windu",
+            image: "images/udang galah.jpg", // Main product image URL
+            sellerName: "Toko Udang Maju Jaya",
+            sellerWhatsapp: "6281234567890", // Example WhatsApp number
+            basePrice: 20000, // Base price for 200g (initial active variant)
+            baseWeight: "200g" // Base weight for 200g
+            // ... other product details like description, reviews, etc.
+        };
+
+        // Function to update displayed price based on selected variant and quantity
+        function updatePriceDisplay() {
+            const totalPrice = currentPrice * quantity;
+            displayPrice.textContent = `Rp ${totalPrice.toLocaleString('id-ID')} / ${currentWeight}`;
+        }
+
+        // Event listeners for variant buttons
+        variantButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                variantButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+
+                currentWeight = button.dataset.weight;
+                currentPrice = parseInt(button.dataset.price);
+
+                updatePriceDisplay();
+            });
+        });
+
+        // Event listeners for quantity control
+        decreaseQtyBtn.addEventListener('click', () => {
+            if (quantity > 1) {
+                quantity--;
+                quantityDisplay.textContent = quantity;
+                updatePriceDisplay();
+            }
+        });
+
+        increaseQtyBtn.addEventListener('click', () => {
+            quantity++;
+            quantityDisplay.textContent = quantity;
+            updatePriceDisplay();
+        });
+
+        // Event listeners for payment method radios (for checkout sidebar, if used directly here)
+        paymentMethodRadios.forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                bankTransferOptions.classList.add('hidden');
+                ewalletOptions.classList.add('hidden');
+                paymentOptionButtons.forEach(btn => btn.classList.remove('selected'));
+
+                if (event.target.value === 'bank') {
+                    bankTransferOptions.classList.remove('hidden');
+                } else if (event.target.value === 'ewallet') {
+                    ewalletOptions.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Event listeners for bank/e-wallet option buttons
+        paymentOptionButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                paymentOptionButtons.forEach(btn => btn.classList.remove('selected'));
+                button.classList.add('selected');
+            });
+        });
+
+        // Event listener for Contact Seller button
+        contactSellerButton.addEventListener('click', () => {
+            const whatsappNumber = currentProductDetail.sellerWhatsapp;
+            if (whatsappNumber) {
+                const message = encodeURIComponent(`Halo, saya tertarik dengan produk ${currentProductDetail.name} (${currentWeight}) di SHRIMPZONE.`);
+                window.open(`https://wa.me/${whatsappNumber}?text=${message}`, '_blank');
+            } else {
+                alert('Nomor WhatsApp penjual tidak tersedia.');
+            }
+        });
+
+        // New: Event listener for Add to Cart button
+        addToCartButton.addEventListener('click', () => {
+            const selectedVariant = document.querySelector('.variant-btn.active');
+            if (!selectedVariant) {
+                alert('Pilih ukuran udang terlebih dahulu.');
+                return;
+            }
+
+            const productId = currentProductDetail.id;
+            const productName = currentProductDetail.name + " (" + selectedVariant.dataset.weight + ")"; // e.g., "Udang Vaname Segar (200g)"
+            const productPrice = parseInt(selectedVariant.dataset.price);
+            const productQuantity = quantity;
+            const productImage = currentProductDetail.image; // Add image to cart item
+
+            // Get current cart from localStorage
+            let shoppingCart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+
+            // Check if product with same variant already exists in cart
+            const existingItemIndex = shoppingCart.findIndex(item => 
+                item.productId === productId && item.variantWeight === selectedVariant.dataset.weight
+            );
+
+            if (existingItemIndex > -1) {
+                // Update quantity if item exists
+                shoppingCart[existingItemIndex].quantity += productQuantity;
+            } else {
+                // Add new item to cart
+                shoppingCart.push({
+                    productId: productId,
+                    productName: productName,
+                    productPrice: productPrice,
+                    quantity: productQuantity,
+                    image: productImage, // Save image to cart item
+                    variantWeight: selectedVariant.dataset.weight // Save variant for uniqueness
+                });
+            }
+
+            localStorage.setItem('shoppingCart', JSON.stringify(shoppingCart));
+            alert(`${productQuantity} ${productName} ditambahkan ke keranjang!`);
+            window.location.href = 'keranjang.html'; // Redirect to cart page
+        });
+
+        // Initial setup on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            bankTransferOptions.classList.add('hidden');
+            ewalletOptions.classList.add('hidden');
+            
+            // Set initial product name (if dynamic)
+            document.getElementById('product-name').textContent = currentProductDetail.name;
+            sellerNameDisplay.textContent = currentProductDetail.sellerName;
+
+            // Set initial price and weight based on the first active variant
+            const initialActiveVariant = document.querySelector('.variant-btn.active');
+            if (initialActiveVariant) {
+                currentWeight = initialActiveVariant.dataset.weight;
+                currentPrice = parseInt(initialActiveVariant.dataset.price);
+                updatePriceDisplay();
+            }
+        });
+    </script>
+</body>
+
+</html>

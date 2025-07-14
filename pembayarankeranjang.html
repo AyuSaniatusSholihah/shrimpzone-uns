@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lakukan Pembayaran - SHRIMPZONE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* bg-gray-100 */
+            color: #1f2937; /* Default text color */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Fixed Header Styles (reused from konfirmasi.html) */
+        .top-orange-strip { /* The very top orange bar */
+            background-color: #f59e0b; /* bg-orange-500 */
+            height: 48px; /* Fixed height from image */
+            width: 100%;
+            position: fixed; /* Stays at the top */
+            top: 0;
+            left: 0;
+            z-index: 50; /* Ensures it's always on top */
+        }
+
+        .main-header-content { /* The white section with icons and title */
+            background-color: white; /* bg-white */
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-md */
+            padding-top: 12px; /* py-3 */
+            padding-bottom: 12px; /* py-3 */
+            position: fixed; /* Stays at the top */
+            top: 48px; /* Below the orange strip */
+            width: 100%;
+            z-index: 40; /* Below orange strip, above main content */
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Space out left and right icons */
+            padding-left: 2rem; /* px-8 */
+            padding-right: 2rem; /* px-8 */
+        }
+
+        .header-icon-group { /* Group for icons like back/home */
+            display: flex; /* flex */
+            align-items: center; /* items-center */
+            gap: 1rem; /* gap-4 */
+        }
+        .header-action-icon {
+            font-size: 1.5rem; /* text-2xl */
+            color: #4b5563; /* text-gray-600 */
+            cursor: pointer; /* cursor-pointer */
+            transition: color 200ms; /* transition duration-200 */
+        }
+        .header-action-icon:hover {
+            color: #2563eb; /* hover:text-blue-600 */
+        }
+
+        .header-page-title-text { /* The "Konfirmasi Pembayaran" title */
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            color: #1f2937; /* text-gray-800 */
+            position: absolute; /* Absolute positioning for exact centering */
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap; /* Prevent title from wrapping */
+            z-index: 10; /* Ensures title is visible */
+        }
+        
+        /* Main content layout adjustment for centering and space from fixed header */
+        main {
+            flex-grow: 1; /* Allows main content to take all available vertical space */
+            padding-top: calc(48px + 48px + 2rem); /* Space from fixed orange strip + fixed header height + some extra padding */
+            padding-bottom: 2rem;
+            box-sizing: border-box;
+        }
+
+        /* Payment Card & Method Options */
+        .payment-card {
+            @apply bg-white p-6 rounded-lg shadow-md;
+        }
+        .payment-method-option {
+            @apply flex items-center space-x-3 p-4 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition duration-200 relative; /* Added relative for absolute positioning of custom radio */
+        }
+        /* Style for the blue border when selected */
+        .payment-method-option.selected {
+            @apply border-blue-600 ring-2 ring-blue-600; /* Reverted to match image_e6f77d.png more closely */
+            background-color: transparent; /* Ensure no background color when selected unless specified */
+        }
+
+        /* Custom Radio Button Styling */
+        .custom-radio {
+            @apply w-5 h-5 border border-gray-400 rounded-full flex items-center justify-center transition-all duration-200;
+            flex-shrink: 0; /* Prevent it from shrinking */
+        }
+        .payment-method-option.selected .custom-radio {
+            @apply bg-blue-600 border-blue-600;
+        }
+        .custom-radio::after {
+            content: '';
+            @apply w-2.5 h-2.5 rounded-full bg-white opacity-0 transition-opacity duration-200;
+        }
+        .payment-method-option.selected .custom-radio::after {
+            @apply opacity-100;
+        }
+
+        /* Order Summary Item Styling */
+        .summary-item-row {
+            @apply flex justify-between text-sm text-gray-700;
+        }
+        .confirm-payment-button {
+            /* This is the new styling for the button to match the blue box */
+            background-color: #ffffff; /* White background */
+            color: #2563eb; /* Blue text */
+            font-weight: 600; /* font-semibold */
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            border: 2px solid #2563eb; /* Blue border */
+            transition: all 200ms ease-in-out; /* Smooth transition for hover */
+            width: 100%; /* w-full */
+        }
+        .confirm-payment-button:hover {
+            background-color: #2563eb; /* Blue background on hover */
+            color: white; /* White text on hover */
+            border-color: #1d4ed8; /* Slightly darker blue border on hover */
+        }
+        .confirm-payment-button:disabled {
+            background-color: #f3f4f6; /* Gray background when disabled */
+            color: #9ca3af; /* Lighter gray text when disabled */
+            border-color: #d1d5db; /* Gray border when disabled */
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-orange-strip"></div>
+
+    <header class="main-header-content">
+        <div class="header-icon-group">
+            <a href="#" onclick="history.back()" class="header-action-icon">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+        
+        <div class="header-page-title-text">
+            Lakukan Pembayaran
+        </div>
+        
+        <div class="header-icon-group">
+            <a href="index.html" class="header-action-icon"><i class="fas fa-home"></i></a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 max-w-4xl">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-2 space-y-6">
+                <div class="payment-card">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Pilih Metode Pembayaran</h2>
+                    <div class="space-y-4" id="payment-method-options-container">
+                        <div class="payment-method-option" data-method="bank-transfer">
+                            <i class="fas fa-university text-blue-600 text-xl"></i>
+                            <label for="bank-transfer" class="flex-1 cursor-pointer">Transfer Bank (BCA, Mandiri, BNI)</label>
+                            <div class="custom-radio"></div>
+                            <input type="radio" name="payment-method-hidden" id="bank-transfer-radio" class="hidden">
+                        </div>
+                        <div class="payment-method-option" data-method="ewallet">
+                            <i class="fas fa-wallet text-green-600 text-xl"></i>
+                            <label for="ewallet" class="flex-1 cursor-pointer">E-Wallet (OVO, GoPay, Dana)</label>
+                            <div class="custom-radio"></div>
+                            <input type="radio" name="payment-method-hidden" id="ewallet-radio" class="hidden">
+                        </div>
+                        <div class="payment-method-option" data-method="credit-card">
+                            <i class="fas fa-credit-card text-purple-600 text-xl"></i>
+                            <label for="credit-card" class="flex-1 cursor-pointer">Kartu Kredit/Debit</label>
+                            <div class="custom-radio"></div>
+                            <input type="radio" name="payment-method-hidden" id="credit-card-radio" class="hidden">
+                        </div>
+                        <div class="payment-method-option" data-method="cod">
+                            <i class="fas fa-hand-holding-usd text-gray-600 text-xl"></i>
+                            <label for="cod" class="flex-1 cursor-pointer">Cash On Delivery (COD)</label>
+                            <div class="custom-radio"></div>
+                            <input type="radio" name="payment-method-hidden" id="cod-radio" class="hidden">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-card">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Detail Pengiriman</h2>
+                    <p class="text-gray-700 mb-2">Alamat: <span id="shipping-address" class="font-medium">Memuat...</span></p>
+                    <p class="text-gray-700">Penerima: <span id="recipient-name" class="font-medium">Memuat...</span></p>
+                    <button id="change-address-button" class="mt-3 text-blue-600 hover:underline text-sm">Ubah Alamat</button>
+                </div>
+            </div>
+
+            <div class="md:col-span-1">
+                <div class="payment-card">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">Ringkasan Pesanan</h2>
+                    <div id="order-summary-items" class="space-y-2 text-gray-700 mb-4 border-b border-gray-200 pb-4">
+                        </div>
+                    <div class="space-y-2 text-gray-700">
+                        <div class="flex justify-between">
+                            <span>Subtotal</span>
+                            <span id="summary-subtotal" class="font-medium">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Biaya Pengiriman</span>
+                            <span class="font-medium">Rp <span id="shipping-cost-display">15.000</span></span>
+                        </div>
+                        <div class="border-t border-gray-200 pt-2 mt-2 flex justify-between font-bold text-lg">
+                            <span>Total Pembayaran</span>
+                            <span id="summary-total-payment">Rp 0</span>
+                        </div>
+                    </div>
+                    <button id="next-to-confirmation-button" class="confirm-payment-button mt-6" disabled>
+                        Lanjutkan ke Konfirmasi Pembayaran
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const paymentMethodOptions = document.querySelectorAll('.payment-method-option');
+        const nextToConfirmationButton = document.getElementById('next-to-confirmation-button');
+        const summarySubtotalDisplay = document.getElementById('summary-subtotal');
+        const summaryTotalPaymentDisplay = document.getElementById('summary-total-payment');
+        const orderSummaryItemsContainer = document.getElementById('order-summary-items');
+        const shippingAddressDisplay = document.getElementById('shipping-address');
+        const recipientNameDisplay = document.getElementById('recipient-name');
+        const changeAddressButton = document.getElementById('change-address-button');
+
+        const SHIPPING_COST = 15000; // Biaya pengiriman tetap
+        let selectedPaymentMethod = null;
+        let currentOrderItems = [];
+        let calculatedSubtotal = 0;
+        let finalPaymentTotal = 0;
+
+        // Function to load order summary and delivery details
+        function loadOrderDetails() {
+            // Get order items from localStorage (assuming 'shoppingCart' is where items are stored)
+            const shoppingCart = JSON.parse(localStorage.getItem('shoppingCart')) || [];
+            currentOrderItems = shoppingCart.map(item => ({
+                productName: item.productName,
+                quantity: item.quantity,
+                // Ensure productPrice is treated as a number for calculation
+                productPrice: parseFloat(item.productPrice) // IMPORTANT: Changed from item.price to item.productPrice
+            }));
+
+            calculatedSubtotal = 0;
+            orderSummaryItemsContainer.innerHTML = ''; // Clear previous items
+
+            if (currentOrderItems.length === 0) {
+                orderSummaryItemsContainer.innerHTML = '<p class="text-red-500 text-center text-sm">Keranjang Anda kosong. Silakan kembali ke halaman produk.</p>';
+                nextToConfirmationButton.disabled = true;
+                nextToConfirmationButton.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                currentOrderItems.forEach(item => {
+                    const itemTotal = item.productPrice * item.quantity;
+                    calculatedSubtotal += itemTotal;
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'summary-item-row';
+                    itemDiv.innerHTML = `
+                        <span>${item.productName} (x${item.quantity})</span>
+                        <span>Rp ${itemTotal.toLocaleString('id-ID')}</span>
+                    `;
+                    orderSummaryItemsContainer.appendChild(itemDiv);
+                });
+            }
+
+            finalPaymentTotal = calculatedSubtotal + SHIPPING_COST;
+
+            // Update summary displays
+            summarySubtotalDisplay.textContent = `Rp ${calculatedSubtotal.toLocaleString('id-ID')}`;
+            document.getElementById('shipping-cost-display').textContent = SHIPPING_COST.toLocaleString('id-ID');
+            summaryTotalPaymentDisplay.textContent = `Rp ${finalPaymentTotal.toLocaleString('id-ID')}`;
+            
+            // Load delivery details
+            const loggedInUsername = localStorage.getItem('loggedInUsername') || 'Pengguna';
+            const checkoutAddress = localStorage.getItem('checkoutAddress');
+            const checkoutRecipientName = localStorage.getItem('checkoutRecipientName');
+
+            if (checkoutAddress) {
+                shippingAddressDisplay.textContent = checkoutAddress;
+            } else {
+                // Fallback to default if no checkout address is explicitly set
+                shippingAddressDisplay.textContent = 'Silakan atur alamat pengiriman Anda';
+                changeAddressButton.textContent = 'Atur Alamat';
+            }
+
+            if (checkoutRecipientName) {
+                recipientNameDisplay.textContent = checkoutRecipientName;
+            } else {
+                recipientNameDisplay.textContent = loggedInUsername; // Default to logged-in user
+            }
+
+            // Check if a payment method was previously selected (e.g., if user navigates back)
+            const savedPaymentMethod = localStorage.getItem('selectedPaymentMethod');
+            if (savedPaymentMethod) {
+                paymentMethodOptions.forEach(option => {
+                    if (option.dataset.method === savedPaymentMethod) {
+                        option.click(); // Simulate click to select it and update UI
+                    }
+                });
+            }
+
+            // Always update button state after loading all details
+            updateButtonState(); 
+        }
+
+        // Function to update button state (enabled/disabled)
+        function updateButtonState() {
+            const hasItemsInCart = currentOrderItems.length > 0;
+            const hasSelectedPaymentMethod = selectedPaymentMethod !== null; // selectedPaymentMethod holds the data-method value
+            const hasAddressAndRecipient = shippingAddressDisplay.textContent !== 'Silakan atur alamat pengiriman Anda' && recipientNameDisplay.textContent !== 'Memuat...';
+
+            if (hasItemsInCart && hasSelectedPaymentMethod && hasAddressAndRecipient) {
+                nextToConfirmationButton.disabled = false;
+                nextToConfirmationButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                nextToConfirmationButton.disabled = true;
+                nextToConfirmationButton.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+
+        // Event listener for selecting payment method
+        paymentMethodOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Remove 'selected' class and uncheck hidden radio for all options
+                paymentMethodOptions.forEach(opt => {
+                    opt.classList.remove('selected');
+                    opt.querySelector('input[type="radio"]').checked = false; // Uncheck the hidden radio
+                });
+                
+                // Add 'selected' class and check hidden radio for the clicked option
+                this.classList.add('selected');
+                this.querySelector('input[type="radio"]').checked = true;
+                
+                selectedPaymentMethod = this.dataset.method; // Store the chosen method key
+                
+                updateButtonState(); // Update button state after payment method is selected
+            });
+        });
+
+        // Event listener for "Lanjutkan ke Konfirmasi Pembayaran" button
+        nextToConfirmationButton.addEventListener('click', () => {
+            if (!selectedPaymentMethod) {
+                alert('Silakan pilih metode pembayaran terlebih dahulu.');
+                return;
+            }
+
+            if (currentOrderItems.length === 0) {
+                alert('Keranjang Anda kosong. Tidak dapat melanjutkan pembayaran.');
+                window.location.href = 'keranjang.html';
+                return;
+            }
+
+            // Save data to localStorage for the next page (konfirmasi.html or struk.html indirectly via konfirmasi.html)
+            localStorage.setItem('selectedPaymentMethod', selectedPaymentMethod);
+            localStorage.setItem('paymentTotal', finalPaymentTotal);
+            localStorage.setItem('currentOrderItems', JSON.stringify(currentOrderItems)); 
+            // Note: checkoutAddress and checkoutRecipientName are already in localStorage from this page or a previous step
+
+            // Redirect to the confirmation page.
+            // The confirmation page (konfirmasi.html) will then handle saving the order to history
+            // and redirecting to struk.html with the orderId.
+            window.location.href = 'konfirmasipembayaran.html'; // This is the page that precedes struk.html
+        });
+
+        // Event listener for "Ubah Alamat" button
+        changeAddressButton.addEventListener('click', () => {
+            // Redirect to a page where the user can update their address
+            alert('Fungsi ubah alamat belum diimplementasikan. Anda akan diarahkan ke halaman profil untuk mengelola alamat.');
+            window.location.href = 'profil.html'; // Example redirect to a profile page where addresses can be managed
+        });
+
+        // Load order details when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', loadOrderDetails);
+    </script>
+</body>
+</html>
